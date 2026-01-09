@@ -37,7 +37,7 @@ const prompt = ai.definePrompt({
   Provide a brief reasoning for your categorization.
 
   Product Name: {{{productName}}}
-  Price: ${{{price}}} USD`,
+  Price: {{{price}}} USD`,
 });
 
 const categorizePurchaseFlow = ai.defineFlow(
