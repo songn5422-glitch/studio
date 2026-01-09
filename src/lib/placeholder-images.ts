@@ -8,3 +8,8 @@ export type ImagePlaceholder = {
 };
 
 export const PlaceHolderImages: ImagePlaceholder[] = data.placeholderImages;
+
+export const getPlaceholderImage = (id: string | undefined) => {
+    if (!id) return undefined;
+    return PlaceHolderImages.find(img => img.id === id);
+}

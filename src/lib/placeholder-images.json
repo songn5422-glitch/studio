@@ -1,3 +1,40 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "sony-headphones",
+      "description": "Sony WH-1000XM5 Headphones",
+      "imageUrl": "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxoZWFkcGhvbmVzfGVufDB8fHx8MTc2Nzg3MzU4OHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "headphones"
+    },
+    {
+      "id": "ps5-game",
+      "description": "PlayStation 5 Game",
+      "imageUrl": "https://images.unsplash.com/photo-1616341317041-cf93b2389ef5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxnYW1pbmclMjBjb250cm9sbGVyfGVufDB8fHx8MTc2Nzg5MDM0OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "gaming controller"
+    },
+    {
+      "id": "groceries",
+      "description": "Bag of groceries",
+      "imageUrl": "https://images.unsplash.com/photo-1707729509134-fe9ad5f6a5b6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxncm9jZXJpZXMlMjBmb29kfGVufDB8fHx8MTc2Nzk2OTcwM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "groceries food"
+    },
+    {
+      "id": "clothing",
+      "description": "Stylish coat",
+      "imageUrl": "https://images.unsplash.com/photo-1534880786429-7cb3199b7b0f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwY29hdHxlbnwwfHx8fDE3Njc5Njk3MDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fashion coat"
+    },
+    {
+      "id": "dining",
+      "description": "Fancy meal at a restaurant",
+      "imageUrl": "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxyZXN0YXVyYW50JTIwZm9vZHxlbnwwfHx8fDE3Njc4ODA5ODF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "restaurant food"
+    },
+    {
+      "id": "transport",
+      "description": "Car at a gas station",
+      "imageUrl": "https://images.unsplash.com/photo-1665965626265-3be8d74d6cd6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjYXIlMjBnYXN8ZW58MHx8fHwxNzY3OTY5NzAzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "car gas"
+    }
+  ]
 }

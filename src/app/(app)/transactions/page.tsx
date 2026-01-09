@@ -1,0 +1,212 @@
+"use client";
+
+import { PageHeader } from "@/components/dashboard/page-header";
+import { useApp } from "@/hooks/use-app";
+import { Transaction } from "@/lib/types";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MoreHorizontal, Download, CheckCircle, XCircle, Clock } from "lucide-react";
+import Image from "next/image";
+import { useState, useMemo } from "react";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
+import { getPlaceholderImage } from "@/lib/placeholder-images";
+
+export default function TransactionsPage() {
+  const { transactions } = useApp();
+  const [filter, setFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
+
+  const filteredTransactions = useMemo(() => {
+    return transactions.filter((tx) => {
+      const searchMatch =
+        filter === "" ||
+        tx.product.toLowerCase().includes(filter.toLowerCase());
+      const categoryMatch =
+        categoryFilter === "All" || tx.category === categoryFilter;
+      const statusMatch = statusFilter === "All" || tx.status === statusFilter;
+      return searchMatch && categoryMatch && statusMatch;
+    });
+  }, [transactions, filter, categoryFilter, statusFilter]);
+
+  const getStatusIcon = (status: Transaction["status"]) => {
+    switch(status) {
+      case "Approved": return <CheckCircle className="h-5 w-5 text-accent" />;
+      case "Locked": return <Clock className="h-5 w-5 text-amber-400" />;
+      case "Refunded": return <XCircle className="h-5 w-5 text-destructive" />;
+      default: return null;
+    }
+  }
+
+  return (
+    <div className="space-y-8">
+      <PageHeader
+        title="Transactions"
+        description="Review and manage your complete transaction history."
+      />
+      <div className="glass-card p-4">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center">
+          <Input
+            placeholder="Filter by product..."
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className="max-w-sm"
+          />
+          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+            <SelectTrigger className="w-full md:w-[180px]">
+              <SelectValue placeholder="Filter by category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="All">All Categories</SelectItem>
+              <SelectItem value="Need">Needs</SelectItem>
+              <SelectItem value="Want">Wants</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-full md:w-[180px]">
+              <SelectValue placeholder="Filter by status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="All">All Statuses</SelectItem>
+              <SelectItem value="Approved">Approved</SelectItem>
+              <SelectItem value="Locked">Locked</SelectItem>
+              <SelectItem value="Refunded">Refunded</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button variant="outline" className="ml-auto">
+            <Download className="mr-2 h-4 w-4" />
+            Download Statement
+          </Button>
+        </div>
+        <div className="mt-4 rounded-md border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Product</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead>Category</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Amount</TableHead>
+                <TableHead className="w-12"></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredTransactions.map((tx) => (
+                <TableRow key={tx.id}>
+                  <TableCell className="font-medium">{tx.product}</TableCell>
+                  <TableCell>{format(new Date(tx.date), "MMM d, yyyy")}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={tx.category === "Need" ? "secondary" : "outline"}
+                      className={cn(tx.category === 'Want' && 'border-amber-400 text-amber-400')}
+                    >
+                      {tx.category}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                        {getStatusIcon(tx.status)}
+                        <span>{tx.status}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right font-mono">${tx.amount.toFixed(2)}</TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <span className="sr-only">Open menu</span>
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem onClick={() => setSelectedTx(tx)}>
+                          View details
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+      
+      {/* Transaction Detail Modal */}
+      <Dialog open={!!selectedTx} onOpenChange={(isOpen) => !isOpen && setSelectedTx(null)}>
+        <DialogContent className="sm:max-w-lg">
+          {selectedTx && (
+            <>
+              <DialogHeader>
+                <DialogTitle>{selectedTx.product}</DialogTitle>
+                <DialogDescription>
+                  Transaction ID: {selectedTx.id}
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                 {getPlaceholderImage(selectedTx.productImage)?.imageUrl && (
+                    <div className="relative aspect-video w-full">
+                        <Image src={getPlaceholderImage(selectedTx.productImage)!.imageUrl} alt={selectedTx.product} fill className="rounded-md object-cover"/>
+                    </div>
+                 )}
+                <div className="text-sm"><strong>Amount:</strong> <span className="font-mono">${selectedTx.amount.toFixed(2)}</span></div>
+                <div className="text-sm"><strong>Date:</strong> {format(new Date(selectedTx.date), "PPP p")}</div>
+                <div className="text-sm"><strong>Category:</strong> {selectedTx.category}</div>
+                <div className="text-sm"><strong>Status:</strong> {selectedTx.status}</div>
+                <p className="rounded-md border bg-muted p-3 text-sm italic text-muted-foreground">
+                    <strong>AI Reasoning:</strong> {selectedTx.aiReasoning}
+                </p>
+                {selectedTx.lockedAmount && (
+                    <div className="text-sm text-amber-400"><strong>Locked Amount:</strong> ${selectedTx.lockedAmount.toFixed(2)}</div>
+                )}
+                {selectedTx.vaultUnlockDate && (
+                    <div className="text-sm text-amber-400"><strong>Unlocks On:</strong> {format(new Date(selectedTx.vaultUnlockDate), "PPP")}</div>
+                )}
+                {selectedTx.blockchainTxHash && (
+                    <div className="text-sm">
+                        <strong>Tx Hash:</strong> 
+                        <a href="#" className="ml-2 text-primary hover:underline truncate block">{selectedTx.blockchainTxHash}</a>
+                    </div>
+                )}
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
