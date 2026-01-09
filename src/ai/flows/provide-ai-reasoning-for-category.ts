@@ -32,13 +32,13 @@ const prompt = ai.definePrompt({
   name: 'provideAIReasoningForCategoryPrompt',
   input: {schema: ProvideAIReasoningForCategoryInputSchema},
   output: {schema: ProvideAIReasoningForCategoryOutputSchema},
-  prompt: `You are an AI assistant that provides reasoning for why a purchase was categorized as either a \"Need\" or a \"Want\".
+  prompt: `You are an AI assistant that provides reasoning for why a purchase was categorized as either a "Need" or a "Want".
 
   Given the following information, explain your reasoning in a concise and easy-to-understand manner.
 
   Product Name: {{{productName}}}
   Category: {{{productCategory}}}
-  Price: ${{{price}}}
+  Price: {{{price}}}
   User Spending History: {{{userSpendingHistory}}}
 
   Reasoning: `,
