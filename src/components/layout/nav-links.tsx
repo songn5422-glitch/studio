@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -52,13 +53,13 @@ export function NavLinks({ isCollapsed, isMobile = false }: { isCollapsed: boole
 
     if (isCollapsed && !isMobile) {
       return (
-        <Tooltip>
+        <Tooltip key={item.href}>
           <TooltipTrigger asChild>{LinkContent}</TooltipTrigger>
           <TooltipContent side="right" sideOffset={5}>{item.label}</TooltipContent>
         </Tooltip>
       );
     }
-    return LinkContent;
+    return <div key={item.href}>{LinkContent}</div>;
   }
 
   return (
