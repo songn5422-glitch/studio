@@ -4,6 +4,7 @@ import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import type { AppState, AppContextType, Transaction, VaultEntry } from '@/lib/types';
 import { MOCK_DATA } from '@/lib/mock-data';
 import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
@@ -13,6 +14,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AppState>(MOCK_DATA);
   const [isInitialized, setIsInitialized] = useState(false);
   const { toast } = useToast();
+  const router = useRouter();
 
   useEffect(() => {
     try {
@@ -42,6 +44,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
     }
   }, [state, isInitialized]);
+  
+  useEffect(() => {
+    if (isInitialized && !state.user.onboardingCompleted) {
+        router.push('/onboarding');
+    }
+  }, [isInitialized, state.user.onboardingCompleted, router]);
 
   const connectWallet = () => {
     setState(prevState => ({
@@ -99,6 +107,25 @@ export function AppProvider({ children }: { children: ReactNode }) {
         user: { ...prevState.user, balance: newBalance }
     }));
   };
+  
+  const setTier = (tier: 'free' | 'premium') => {
+    setState(prevState => ({
+      ...prevState,
+      user: { ...prevState.user, tier }
+    }));
+    toast({
+      title: `Switched to ${tier.charAt(0).toUpperCase() + tier.slice(1)} Plan`,
+      description: tier === 'premium' ? "All premium features are now unlocked!" : "You are now on the free plan."
+    })
+  };
+
+  const completeOnboarding = () => {
+    setState(prevState => ({
+        ...prevState,
+        user: {...prevState.user, onboardingCompleted: true}
+    }));
+    router.push('/dashboard');
+  }
 
   const value: AppContextType = {
     ...state,
@@ -108,11 +135,19 @@ export function AppProvider({ children }: { children: ReactNode }) {
     addTransaction,
     addVaultEntry,
     updateBalance,
+    setTier,
+    completeOnboarding,
   };
 
   if (!isInitialized) {
     return null; // Or a loading spinner
   }
+  
+  // Prevent rendering children if onboarding is not complete
+  if (!state.user.onboardingCompleted && isInitialized) {
+     return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+  }
+
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }

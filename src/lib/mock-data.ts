@@ -1,5 +1,4 @@
 import type { AppState } from '@/lib/types';
-import { format } from 'date-fns';
 
 const now = new Date();
 
@@ -7,9 +6,11 @@ export const MOCK_DATA: AppState = {
   user: {
     walletAddress: null,
     balance: 2450.0,
+    tier: 'premium', // Default to premium for existing setup
+    onboardingCompleted: false, // Will be set to true after onboarding
     connectedBanks: [
-      { name: 'Chase Bank', accountNumber: '****1234', type: 'Checking' },
-      { name: 'Wells Fargo', accountNumber: '****5678', type: 'Savings' },
+      { id: 'bank1', name: 'Chase Bank', accountNumber: '****1234', type: 'Checking', balance: 3250.00 },
+      { id: 'bank2', name: 'Wells Fargo', accountNumber: '****5678', type: 'Savings', balance: 12500.00 },
     ],
   },
   settings: {

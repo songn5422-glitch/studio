@@ -3,14 +3,15 @@ export type Transaction = {
   date: string;
   product: string;
   amount: number;
-  category: 'Need' | 'Want';
-  aiReasoning: string;
-  status: 'Approved' | 'Locked' | 'Refunded';
+  category: 'Need' | 'Want' | string; // Allow general strings for free tier
+  aiReasoning?: string;
+  status: 'Approved' | 'Locked' | 'Refunded' | 'Posted';
   oracleVerified: boolean;
   lockedAmount?: number;
   vaultUnlockDate?: string;
   blockchainTxHash?: string;
   productImage?: string;
+  accountId?: string;
 };
 
 export type VaultEntry = {
@@ -31,14 +32,20 @@ export type Settings = {
   categorizationSensitivity: 'Lenient' | 'Balanced' | 'Strict';
 };
 
+export type ConnectedAccount = {
+  id: string;
+  name: string;
+  accountNumber: string;
+  type: string;
+  balance: number;
+};
+
 export type User = {
   walletAddress: string | null;
   balance: number;
-  connectedBanks: Array<{
-    name: string;
-    accountNumber: string;
-    type: string;
-  }>;
+  tier: 'free' | 'premium';
+  onboardingCompleted: boolean;
+  connectedBanks: ConnectedAccount[];
 };
 
 export type AppState = {
@@ -55,4 +62,6 @@ export type AppContextType = AppState & {
   addTransaction: (transaction: Omit<Transaction, 'id' | 'date'>) => void;
   addVaultEntry: (vaultEntry: Omit<VaultEntry, 'id'>) => void;
   updateBalance: (newBalance: number) => void;
+  setTier: (tier: 'free' | 'premium') => void;
+  completeOnboarding: () => void;
 };

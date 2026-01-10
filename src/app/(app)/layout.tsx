@@ -8,9 +8,19 @@ import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { useApp } from '@/hooks/use-app';
+import { useRouter } from 'next/navigation';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const { user } = useApp();
+  const router = useRouter();
+
+  if (!user.onboardingCompleted) {
+    // This should be handled by the context, but as a fallback
+    router.push('/onboarding');
+    return null; 
+  }
 
   return (
     <TooltipProvider>
