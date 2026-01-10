@@ -16,7 +16,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 
 export default function DashboardPage() {
   const { t } = useLanguage();
-  const { user } = useApp();
+  const { user, setTier } = useApp();
 
   if (user.tier === 'free') {
     return (
@@ -41,7 +41,7 @@ export default function DashboardPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button size="lg" className="bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90">
+            <Button onClick={() => setTier('premium')} size="lg" className="bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90">
                <Star className="mr-2 h-4 w-4" />
               {t('upgrade_to_premium')}
             </Button>

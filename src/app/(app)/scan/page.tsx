@@ -30,7 +30,7 @@ export default function ScanPage() {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <Button size="lg" className="bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90">
+                <Button onClick={() => setTier('premium')} size="lg" className="bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90">
                     <Star className="mr-2 h-4 w-4" />
                     {t('upgrade_to_premium')}
                 </Button>

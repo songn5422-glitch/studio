@@ -8,7 +8,7 @@ import { LanguageSwitcher } from './language-switcher';
 import { useLanguage } from '@/context/language-context';
 
 export function Header() {
-  const { user } = useApp();
+  const { user, setTier } = useApp();
   const { t } = useLanguage();
 
   return (
@@ -22,7 +22,7 @@ export function Header() {
 
       <div className="flex w-full items-center justify-end gap-2">
         {user.tier === 'free' && user.onboardingCompleted && (
-          <Button size="sm" className="bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 hidden sm:flex">
+          <Button onClick={() => setTier('premium')} size="sm" className="bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 hidden sm:flex">
             <Star className="mr-2 h-4 w-4" />
             {t('upgrade_to_premium')}
           </Button>

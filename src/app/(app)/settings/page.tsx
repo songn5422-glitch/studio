@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { PageHeader } from "@/components/dashboard/page-header";
@@ -21,7 +22,7 @@ import { Banknote, Bell, Bot, ShieldCheck, Lock, Star, User as UserIcon } from "
 import { useLanguage } from "@/context/language-context";
 
 export default function SettingsPage() {
-  const { settings, user, setState } = useApp();
+  const { settings, user, setState, setTier } = useApp();
   const { toast } = useToast();
   const { t } = useLanguage();
   const isPremium = user.tier === 'premium';
@@ -115,7 +116,7 @@ export default function SettingsPage() {
                 <Lock className="h-10 w-10 text-primary mb-4" />
                 <h3 className="text-xl font-bold">Unlock Vault Settings</h3>
                 <p className="text-muted-foreground mb-4">Upgrade to Premium to enable automated savings and time-locked protection.</p>
-                <Button> <Star className="mr-2 h-4 w-4" /> {t('upgrade_to_premium')}</Button>
+                <Button onClick={() => setTier('premium')}> <Star className="mr-2 h-4 w-4" /> {t('upgrade_to_premium')}</Button>
               </div>
             )}
             <CardHeader>
@@ -160,7 +161,7 @@ export default function SettingsPage() {
                         <Lock className="h-10 w-10 text-primary mb-4" />
                         <h3 className="text-xl font-bold">Unlock AI Preferences</h3>
                         <p className="text-muted-foreground mb-4">Get advanced Need vs. Want categorization and insights.</p>
-                        <Button><Star className="mr-2 h-4 w-4" />{t('upgrade_to_premium')}</Button>
+                        <Button onClick={() => setTier('premium')}><Star className="mr-2 h-4 w-4" />{t('upgrade_to_premium')}</Button>
                     </div>
                 )}
               <CardHeader>
@@ -226,4 +227,3 @@ export default function SettingsPage() {
     </div>
   );
 }
-
