@@ -5,9 +5,11 @@ import { useApp } from '@/hooks/use-app';
 import { Button } from '../ui/button';
 import { Star } from 'lucide-react';
 import { LanguageSwitcher } from './language-switcher';
+import { useLanguage } from '@/context/language-context';
 
 export function Header() {
   const { user } = useApp();
+  const { t } = useLanguage();
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur-sm md:px-6">
@@ -22,7 +24,7 @@ export function Header() {
         {user.tier === 'free' && user.onboardingCompleted && (
           <Button size="sm" className="bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 hidden sm:flex">
             <Star className="mr-2 h-4 w-4" />
-            Upgrade to Premium
+            {t('upgrade_to_premium')}
           </Button>
         )}
         <LanguageSwitcher />

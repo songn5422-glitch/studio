@@ -21,24 +21,26 @@ import {
 } from '@/components/ui/tooltip';
 import { useApp } from '@/hooks/use-app';
 import { Badge } from '../ui/badge';
-
-const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, premium: false },
-  { href: '/scan', label: 'Scan Purchase', icon: ScanLine, premium: true },
-  { href: '/transactions', label: 'Transactions', icon: ArrowRightLeft, premium: false },
-  { href: '/analytics', label: 'Analytics', icon: AreaChart, premium: false },
-  { href: '/vault', label: 'Vault', icon: ShieldCheck, premium: true },
-];
-
-const secondaryNavItems = [
-    { href: '/settings', label: 'Settings', icon: Settings, premium: false },
-    { href: '/legal', label: 'Legal', icon: Gavel, premium: false },
-]
+import { useLanguage } from '@/context/language-context';
 
 export function NavLinks({ isCollapsed, isMobile = false }: { isCollapsed: boolean, isMobile?: boolean }) {
   const pathname = usePathname();
   const { user } = useApp();
+  const { t } = useLanguage();
   const isPremium = user.tier === 'premium';
+
+  const navItems = [
+    { href: '/dashboard', label: t('dashboard'), icon: LayoutDashboard, premium: false },
+    { href: '/scan', label: t('scan_purchase'), icon: ScanLine, premium: true },
+    { href: '/transactions', label: t('transactions'), icon: ArrowRightLeft, premium: false },
+    { href: '/analytics', label: t('analytics'), icon: AreaChart, premium: false },
+    { href: '/vault', label: t('vault'), icon: ShieldCheck, premium: true },
+  ];
+  
+  const secondaryNavItems = [
+      { href: '/settings', label: t('settings'), icon: Settings, premium: false },
+      { href: '/legal', label: t('legal'), icon: Gavel, premium: false },
+  ]
 
   const renderLink = (item: typeof navItems[0]) => {
     const isActive = pathname === item.href || (item.href === '/dashboard' && pathname === '/');
