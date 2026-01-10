@@ -4,6 +4,7 @@ import { useApp } from "@/hooks/use-app";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { useMemo } from 'react';
+import { useLanguage } from "@/context/language-context";
 
 // Simple mapping for demo purposes
 const getBroaderCategory = (productName: string) => {
@@ -22,6 +23,7 @@ const COLORS = ['var(--chart-1)', 'var(--chart-2)', 'var(--chart-3)', 'var(--cha
 
 export function CategoryChart() {
     const { transactions } = useApp();
+    const { t } = useLanguage();
 
     const chartData = useMemo(() => {
         const categoryMap: { [key: string]: number } = {};
@@ -40,8 +42,8 @@ export function CategoryChart() {
     return (
         <Card className="glass-card">
             <CardHeader>
-                <CardTitle>Category Breakdown</CardTitle>
-                <CardDescription>Spending distribution by category.</CardDescription>
+                <CardTitle>{t('category_breakdown')}</CardTitle>
+                <CardDescription>{t('category_breakdown_desc')}</CardDescription>
             </CardHeader>
             <CardContent>
                 <div className="h-[300px]">

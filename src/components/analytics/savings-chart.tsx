@@ -5,9 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useMemo } from "react";
 import { format } from 'date-fns';
+import { useLanguage } from "@/context/language-context";
 
 export function SavingsChart() {
   const { vaultEntries } = useApp();
+  const { t } = useLanguage();
 
   const chartData = useMemo(() => {
     if (vaultEntries.length === 0) return [];
@@ -27,8 +29,8 @@ export function SavingsChart() {
   return (
     <Card className="glass-card">
       <CardHeader>
-        <CardTitle>Savings Growth</CardTitle>
-        <CardDescription>Accumulated savings in your vault over time.</CardDescription>
+        <CardTitle>{t('savings_growth')}</CardTitle>
+        <CardDescription>{t('savings_growth_desc')}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="h-[300px]">

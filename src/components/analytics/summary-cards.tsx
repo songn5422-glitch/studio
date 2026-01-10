@@ -4,9 +4,11 @@ import { useApp } from "@/hooks/use-app";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, ShieldAlert, ShieldCheck, Ratio } from "lucide-react";
 import { useMemo } from "react";
+import { useLanguage } from "@/context/language-context";
 
 export function SummaryCards() {
   const { transactions, vaultEntries } = useApp();
+  const { t } = useLanguage();
 
   const stats = useMemo(() => {
     const oneMonthAgo = new Date();
@@ -27,22 +29,22 @@ export function SummaryCards() {
 
   const summaryData = [
     {
-      title: "Total Spent This Month",
+      title: t('total_spent_this_month'),
       value: `$${stats.totalSpent.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
       icon: DollarSign,
     },
     {
-      title: "Needs vs Wants Ratio",
+      title: t('needs_vs_wants_ratio'),
       value: `${stats.ratio.toFixed(0)}% / ${(100 - stats.ratio).toFixed(0)}%`,
       icon: Ratio,
     },
     {
-      title: "Total Saved in Vault",
+      title: t('total_saved_in_vault'),
       value: `$${stats.totalSaved.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
       icon: ShieldCheck,
     },
     {
-      title: "Impulse Purchases Prevented",
+      title: t('impulse_purchases_prevented'),
       value: stats.preventedPurchases,
       icon: ShieldAlert,
     },

@@ -1,12 +1,15 @@
+'use client';
 import { PageHeader } from "@/components/dashboard/page-header";
 import { PurchaseScanner } from "@/components/scan/purchase-scanner";
+import { useLanguage } from "@/context/language-context";
 
 export default function ScanPage() {
+  const { t } = useLanguage();
   return (
     <div className="space-y-8">
       <PageHeader
-        title="Scan Your Next Purchase"
-        description="Let our AI analyze your purchase to help you stay on budget."
+        title={t('scan_title')}
+        description={t('scan_desc')}
       />
       <div className="mx-auto max-w-2xl">
         <PurchaseScanner />

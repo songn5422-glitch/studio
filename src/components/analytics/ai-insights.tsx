@@ -1,4 +1,7 @@
+'use client';
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { useLanguage } from "@/context/language-context";
 import { Lightbulb } from "lucide-react";
 
 const mockInsights = [
@@ -8,14 +11,16 @@ const mockInsights = [
 ];
 
 export function AiInsights() {
+  const { t } = useLanguage();
+
   return (
     <Card className="glass-card">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Lightbulb className="text-primary h-6 w-6" />
-          AI Insights
+          {t('ai_insights')}
         </CardTitle>
-        <CardDescription>Actionable advice based on your spending habits.</CardDescription>
+        <CardDescription>{t('ai_insights_desc')}</CardDescription>
       </CardHeader>
       <CardContent>
         <ul className="space-y-4">

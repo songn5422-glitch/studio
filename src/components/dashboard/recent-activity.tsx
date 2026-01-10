@@ -6,16 +6,18 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { CheckCircle, XCircle } from 'lucide-react';
+import { useLanguage } from '@/context/language-context';
 
 export function RecentActivity() {
   const { transactions } = useApp();
+  const { t } = useLanguage();
   const recentTransactions = transactions.slice(0, 5);
 
   return (
     <Card className="glass-card">
       <CardHeader>
-        <CardTitle>Recent Activity</CardTitle>
-        <CardDescription>Your last 5 transactions.</CardDescription>
+        <CardTitle>{t('recent_activity')}</CardTitle>
+        <CardDescription>{t('your_last_5_transactions')}</CardDescription>
       </CardHeader>
       <CardContent>
         <ul className="space-y-4">
@@ -32,7 +34,7 @@ export function RecentActivity() {
               </div>
               <div className="flex items-center gap-4">
                  <Badge variant={tx.category === 'Need' ? 'secondary' : 'outline'} className={cn(tx.category === 'Want' && 'border-amber-400 text-amber-400')}>
-                  {tx.category}
+                  {tx.category === 'Need' ? t('needs') : t('wants')}
                 </Badge>
                 <p className="font-semibold text-right w-24">
                   ${tx.amount.toFixed(2)}

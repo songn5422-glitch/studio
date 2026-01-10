@@ -5,9 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { useMemo } from 'react';
+import { useLanguage } from '@/context/language-context';
 
 export function ProtectionStatus() {
   const { transactions, settings } = useApp();
+  const { t } = useLanguage();
 
   const wantsSpendingThisMonth = useMemo(() => {
     const oneMonthAgo = new Date();
@@ -22,12 +24,12 @@ export function ProtectionStatus() {
 
   const getStatus = () => {
     if (percentageUsed > 70) {
-      return { label: 'Protection Active', color: 'text-destructive', progressColor: 'bg-destructive' };
+      return { label: t('protection_active'), color: 'text-destructive', progressColor: 'bg-destructive' };
     }
     if (percentageUsed > 30) {
-      return { label: 'Caution', color: 'text-amber-400', progressColor: 'bg-amber-400' };
+      return { label: t('caution'), color: 'text-amber-400', progressColor: 'bg-amber-400' };
     }
-    return { label: 'Safe Zone', color: 'text-accent', progressColor: 'bg-accent' };
+    return { label: t('safe_zone'), color: 'text-accent', progressColor: 'bg-accent' };
   };
 
   const status = getStatus();
@@ -35,14 +37,14 @@ export function ProtectionStatus() {
   return (
     <Card className="glass-card">
       <CardHeader>
-        <CardTitle>Protection Status</CardTitle>
+        <CardTitle>{t('protection_status')}</CardTitle>
         <CardDescription>
-            Your &quot;Wants&quot; spending relative to your monthly budget.
+            {t('wants_spending_desc')}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="mb-4 flex items-baseline gap-2">
-            <p className="text-2xl font-bold">Current Level:</p>
+            <p className="text-2xl font-bold">{t('current_level')}</p>
             <p className={cn("text-2xl font-bold", status.color)}>{status.label}</p>
         </div>
         <Progress value={percentageUsed} className="h-3 [&>div]:bg-gradient-to-r [&>div]:from-accent [&>div]:via-amber-400 [&>div]:to-destructive" />

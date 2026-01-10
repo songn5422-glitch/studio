@@ -42,9 +42,11 @@ import { useState, useMemo } from "react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { getPlaceholderImage } from "@/lib/placeholder-images";
+import { useLanguage } from "@/context/language-context";
 
 export default function TransactionsPage() {
   const { transactions } = useApp();
+  const { t } = useLanguage();
   const [filter, setFilter] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
@@ -74,13 +76,13 @@ export default function TransactionsPage() {
   return (
     <div className="space-y-8">
       <PageHeader
-        title="Transactions"
-        description="Review and manage your complete transaction history."
+        title={t('transactions_title')}
+        description={t('transactions_desc')}
       />
       <div className="glass-card p-4">
         <div className="flex flex-col gap-4 md:flex-row md:items-center">
           <Input
-            placeholder="Filter by product..."
+            placeholder={t('filter_by_product')}
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
             className="max-w-sm"
@@ -90,9 +92,9 @@ export default function TransactionsPage() {
               <SelectValue placeholder="Filter by category" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="All">All Categories</SelectItem>
-              <SelectItem value="Need">Needs</SelectItem>
-              <SelectItem value="Want">Wants</SelectItem>
+              <SelectItem value="All">{t('all_categories')}</SelectItem>
+              <SelectItem value="Need">{t('needs')}</SelectItem>
+              <SelectItem value="Want">{t('wants')}</SelectItem>
             </SelectContent>
           </Select>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -100,26 +102,26 @@ export default function TransactionsPage() {
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="All">All Statuses</SelectItem>
-              <SelectItem value="Approved">Approved</SelectItem>
-              <SelectItem value="Locked">Locked</SelectItem>
-              <SelectItem value="Refunded">Refunded</SelectItem>
+              <SelectItem value="All">{t('all_statuses')}</SelectItem>
+              <SelectItem value="Approved">{t('approved')}</SelectItem>
+              <SelectItem value="Locked">{t('locked')}</SelectItem>
+              <SelectItem value="Refunded">{t('refunded')}</SelectItem>
             </SelectContent>
           </Select>
           <Button variant="outline" className="ml-auto">
             <Download className="mr-2 h-4 w-4" />
-            Download Statement
+            {t('download_statement')}
           </Button>
         </div>
         <div className="mt-4 rounded-md border">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Product</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
+                <TableHead>{t('product')}</TableHead>
+                <TableHead>{t('date')}</TableHead>
+                <TableHead>{t('category')}</TableHead>
+                <TableHead>{t('status')}</TableHead>
+                <TableHead className="text-right">{t('amount')}</TableHead>
                 <TableHead className="w-12"></TableHead>
               </TableRow>
             </TableHeader>
@@ -133,13 +135,13 @@ export default function TransactionsPage() {
                       variant={tx.category === "Need" ? "secondary" : "outline"}
                       className={cn(tx.category === 'Want' && 'border-amber-400 text-amber-400')}
                     >
-                      {tx.category}
+                      {tx.category === 'Need' ? t('needs') : t('wants')}
                     </Badge>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
                         {getStatusIcon(tx.status)}
-                        <span>{tx.status}</span>
+                        <span>{t(tx.status.toLowerCase())}</span>
                     </div>
                   </TableCell>
                   <TableCell className="text-right font-mono">${tx.amount.toFixed(2)}</TableCell>
@@ -152,9 +154,9 @@ export default function TransactionsPage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuLabel>{t('actions')}</DropdownMenuLabel>
                         <DropdownMenuItem onClick={() => setSelectedTx(tx)}>
-                          View details
+                          {t('view_details')}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -183,10 +185,10 @@ export default function TransactionsPage() {
                         <Image src={getPlaceholderImage(selectedTx.productImage)!.imageUrl} alt={selectedTx.product} fill className="rounded-md object-cover"/>
                     </div>
                  )}
-                <div className="text-sm"><strong>Amount:</strong> <span className="font-mono">${selectedTx.amount.toFixed(2)}</span></div>
-                <div className="text-sm"><strong>Date:</strong> {format(new Date(selectedTx.date), "PPP p")}</div>
-                <div className="text-sm"><strong>Category:</strong> {selectedTx.category}</div>
-                <div className="text-sm"><strong>Status:</strong> {selectedTx.status}</div>
+                <div className="text-sm"><strong>{t('amount')}:</strong> <span className="font-mono">${selectedTx.amount.toFixed(2)}</span></div>
+                <div className="text-sm"><strong>{t('date')}:</strong> {format(new Date(selectedTx.date), "PPP p")}</div>
+                <div className="text-sm"><strong>{t('category')}:</strong> {selectedTx.category === "Need" ? t('needs') : t('wants')}</div>
+                <div className="text-sm"><strong>{t('status')}:</strong> {t(selectedTx.status.toLowerCase())}</div>
                 <p className="rounded-md border bg-muted p-3 text-sm italic text-muted-foreground">
                     <strong>AI Reasoning:</strong> {selectedTx.aiReasoning}
                 </p>

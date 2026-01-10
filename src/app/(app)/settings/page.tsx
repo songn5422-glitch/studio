@@ -15,13 +15,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { Banknote, Bell, Bot, ShieldCheck } from "lucide-react";
+import { useLanguage } from "@/context/language-context";
 
 export default function SettingsPage() {
   const { settings, user, setState } = useApp();
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleSettingsChange = (key: keyof typeof settings, value: any) => {
     setState(prevState => ({
@@ -32,25 +33,25 @@ export default function SettingsPage() {
   
   const handleSave = () => {
     // State is already saved to localStorage via context useEffect
-    toast({ title: "Settings Saved", description: "Your preferences have been updated." });
+    toast({ title: t('settings_title') + " Saved", description: "Your preferences have been updated." });
   }
 
   return (
     <div className="space-y-8">
       <PageHeader
-        title="Settings"
-        description="Customize your SmartGuard experience and fine-tune your financial rules."
+        title={t('settings_title')}
+        description={t('settings_desc')}
       />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
           <Card className="glass-card">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2"><Banknote/> Spending Rules</CardTitle>
-              <CardDescription>Set your monthly budget limits.</CardDescription>
+              <CardTitle className="flex items-center gap-2"><Banknote/> {t('spending_rules')}</CardTitle>
+              <CardDescription>{t('spending_rules_desc')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="wants-budget">Monthly 'Wants' Budget</Label>
+                <Label htmlFor="wants-budget">{t('monthly_wants_budget')}</Label>
                 <Input
                   id="wants-budget"
                   type="number"
@@ -59,7 +60,7 @@ export default function SettingsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="needs-budget">Monthly 'Needs' Budget</Label>
+                <Label htmlFor="needs-budget">{t('monthly_needs_budget')}</Label>
                 <Input
                   id="needs-budget"
                   type="number"
@@ -68,7 +69,7 @@ export default function SettingsPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Alert me when 'Wants' spending reaches: {settings.alertThreshold}%</Label>
+                <Label>{t('alert_me_at')} {settings.alertThreshold}%</Label>
                 <Slider
                   value={[settings.alertThreshold]}
                   onValueChange={(value) => handleSettingsChange('alertThreshold', value[0])}
@@ -81,29 +82,29 @@ export default function SettingsPage() {
           
           <Card className="glass-card">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2"><ShieldCheck/> Vault Settings</CardTitle>
-              <CardDescription>Configure your impulse protection.</CardDescription>
+              <CardTitle className="flex items-center gap-2"><ShieldCheck/> {t('vault_settings')}</CardTitle>
+              <CardDescription>{t('vault_settings_desc')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
                <div className="space-y-2">
-                <Label>Default lock duration</Label>
+                <Label>{t('default_lock_duration')}</Label>
                 <Select value={String(settings.lockDuration)} onValueChange={(value) => handleSettingsChange('lockDuration', parseInt(value))}>
                     <SelectTrigger>
                         <SelectValue placeholder="Select duration" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="7">7 days</SelectItem>
-                        <SelectItem value="14">14 days</SelectItem>
-                        <SelectItem value="30">30 days</SelectItem>
-                        <SelectItem value="60">60 days</SelectItem>
-                        <SelectItem value="90">90 days</SelectItem>
+                        <SelectItem value="7">7 {t('days')}</SelectItem>
+                        <SelectItem value="14">14 {t('days')}</SelectItem>
+                        <SelectItem value="30">30 {t('days')}</SelectItem>
+                        <SelectItem value="60">60 {t('days')}</SelectItem>
+                        <SelectItem value="90">90 {t('days')}</SelectItem>
                     </SelectContent>
                 </Select>
                </div>
                <div className="flex items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
-                    <Label className="text-base">Auto-lock trigger</Label>
-                    <p className="text-sm text-muted-foreground">Lock excess amount when 'Wants' spending exceeds limit.</p>
+                    <Label className="text-base">{t('auto_lock_trigger')}</Label>
+                    <p className="text-sm text-muted-foreground">{t('auto_lock_desc')}</p>
                   </div>
                   <Switch
                     checked={settings.autoLockEnabled}
@@ -117,19 +118,19 @@ export default function SettingsPage() {
         <div className="space-y-8">
             <Card className="glass-card">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2"><Bot/> AI Preferences</CardTitle>
+                <CardTitle className="flex items-center gap-2"><Bot/> {t('ai_preferences')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-2">
-                  <Label>Categorization Sensitivity</Label>
+                  <Label>{t('categorization_sensitivity')}</Label>
                    <Select value={settings.categorizationSensitivity} onValueChange={(value) => handleSettingsChange('categorizationSensitivity', value)}>
                     <SelectTrigger>
                         <SelectValue placeholder="Select sensitivity" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="Lenient">Lenient (More Needs)</SelectItem>
-                        <SelectItem value="Balanced">Balanced</SelectItem>
-                        <SelectItem value="Strict">Strict (More Wants)</SelectItem>
+                        <SelectItem value="Lenient">{t('lenient')}</SelectItem>
+                        <SelectItem value="Balanced">{t('balanced')}</SelectItem>
+                        <SelectItem value="Strict">{t('strict')}</SelectItem>
                     </SelectContent>
                 </Select>
                 </div>
@@ -138,16 +139,16 @@ export default function SettingsPage() {
 
             <Card className="glass-card">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2"><Bell/> Notifications</CardTitle>
+                  <CardTitle className="flex items-center gap-2"><Bell/> {t('notifications')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <div className="flex items-center justify-between"><Label>Budget threshold alerts</Label><Switch defaultChecked/></div>
-                    <div className="flex items-center justify-between"><Label>Vault unlock notifications</Label><Switch defaultChecked/></div>
-                    <div className="flex items-center justify-between"><Label>Weekly spending summaries</Label><Switch/></div>
+                    <div className="flex items-center justify-between"><Label>{t('budget_threshold_alerts')}</Label><Switch defaultChecked/></div>
+                    <div className="flex items-center justify-between"><Label>{t('vault_unlock_notifications')}</Label><Switch defaultChecked/></div>
+                    <div className="flex items-center justify-between"><Label>{t('weekly_spending_summaries')}</Label><Switch/></div>
                 </CardContent>
             </Card>
 
-            <Button onClick={handleSave} className="w-full">Save Changes</Button>
+            <Button onClick={handleSave} className="w-full">{t('save_changes')}</Button>
         </div>
       </div>
     </div>

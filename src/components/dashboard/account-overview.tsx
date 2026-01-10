@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowDown, ArrowUp } from 'lucide-react';
+import { useLanguage } from '@/context/language-context';
 
 export function AccountOverview() {
   const { user, updateBalance } = useApp();
@@ -29,6 +30,7 @@ export function AccountOverview() {
   const [isWithdrawModalOpen, setWithdrawModalOpen] = useState(false);
   const [amount, setAmount] = useState('');
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleDeposit = () => {
     const depositAmount = parseFloat(amount);
@@ -81,17 +83,17 @@ export function AccountOverview() {
       <div className="glass-card p-6 md:p-8">
         <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
           <div>
-            <p className="text-sm font-medium text-muted-foreground">Total Balance</p>
+            <p className="text-sm font-medium text-muted-foreground">{t('total_balance')}</p>
             <p className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
               ${user.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
           </div>
           <div className="flex w-full gap-2 sm:w-auto">
             <Button size="lg" className="w-full sm:w-auto" onClick={() => setDepositModalOpen(true)}>
-              <ArrowDown className="mr-2 h-4 w-4" /> Add Funds
+              <ArrowDown className="mr-2 h-4 w-4" /> {t('add_funds')}
             </Button>
             <Button size="lg" variant="secondary" className="w-full sm:w-auto" onClick={() => setWithdrawModalOpen(true)}>
-              <ArrowUp className="mr-2 h-4 w-4" /> Withdraw
+              <ArrowUp className="mr-2 h-4 w-4" /> {t('withdraw')}
             </Button>
           </div>
         </div>
@@ -101,12 +103,12 @@ export function AccountOverview() {
       <Dialog open={isDepositModalOpen} onOpenChange={setDepositModalOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Add Funds</DialogTitle>
-            <DialogDescription>Deposit funds from your linked bank account.</DialogDescription>
+            <DialogTitle>{t('deposit_funds')}</DialogTitle>
+            <DialogDescription>{t('deposit_desc')}</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="bank" className="text-right">Bank</Label>
+              <Label htmlFor="bank" className="text-right">{t('bank')}</Label>
               <Select defaultValue={user.connectedBanks[0].accountNumber}>
                 <SelectTrigger id="bank" className="col-span-3">
                   <SelectValue placeholder="Select a bank" />
@@ -121,7 +123,7 @@ export function AccountOverview() {
               </Select>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="amount" className="text-right">Amount</Label>
+              <Label htmlFor="amount" className="text-right">{t('amount')}</Label>
               <Input
                 id="amount"
                 type="number"
@@ -133,7 +135,7 @@ export function AccountOverview() {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" onClick={handleDeposit}>Deposit</Button>
+            <Button type="submit" onClick={handleDeposit}>{t('deposit')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -142,12 +144,12 @@ export function AccountOverview() {
       <Dialog open={isWithdrawModalOpen} onOpenChange={setWithdrawModalOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Withdraw to Bank</DialogTitle>
-            <DialogDescription>Withdraw funds to your linked bank account.</DialogDescription>
+            <DialogTitle>{t('withdraw_to_bank')}</DialogTitle>
+            <DialogDescription>{t('withdraw_desc')}</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
              <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="bank-withdraw" className="text-right">Bank</Label>
+              <Label htmlFor="bank-withdraw" className="text-right">{t('bank')}</Label>
               <Select defaultValue={user.connectedBanks[0].accountNumber}>
                 <SelectTrigger id="bank-withdraw" className="col-span-3">
                   <SelectValue placeholder="Select a bank" />
@@ -162,7 +164,7 @@ export function AccountOverview() {
               </Select>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="amount-withdraw" className="text-right">Amount</Label>
+              <Label htmlFor="amount-withdraw" className="text-right">{t('amount')}</Label>
               <Input
                 id="amount-withdraw"
                 type="number"
@@ -174,7 +176,7 @@ export function AccountOverview() {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" onClick={handleWithdraw}>Withdraw</Button>
+            <Button type="submit" onClick={handleWithdraw}>{t('withdraw')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

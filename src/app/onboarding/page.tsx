@@ -4,33 +4,33 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Check, Shield } from 'lucide-react';
 import { useApp } from '@/hooks/use-app';
-import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-
-const freeFeatures = [
-    "Link unlimited bank accounts",
-    "Real-time spending tracking",
-    "AI-powered spending insights",
-    "Budget alerts and warnings",
-    "Blockchain-verified transaction history",
-    "Basic analytics and charts",
-    "Monthly spending reports"
-];
-
-const premiumFeatures = [
-    "Everything in Basic, plus:",
-    "Advanced AI categorization (Needs vs Wants)",
-    "Oracle-verified price checking",
-    "Smart contract savings vault",
-    "Automated impulse spending protection",
-    "AI investment recommendations",
-    "DeFi yield optimization",
-    "Priority support"
-];
-
+import { useLanguage } from '@/context/language-context';
 
 export default function OnboardingPage() {
     const { setTier, completeOnboarding } = useApp();
+    const { t } = useLanguage();
+
+    const freeFeatures = [
+        t('link_unlimited_accounts'),
+        t('real_time_spending_tracking'),
+        t('ai_powered_spending_insights'),
+        t('budget_alerts_and_warnings'),
+        t('blockchain_verified_history'),
+        t('basic_analytics'),
+        t('monthly_spending_reports')
+    ];
+
+    const premiumFeatures = [
+        t('everything_in_basic'),
+        t('advanced_ai_categorization'),
+        t('oracle_verified_price_checking'),
+        t('smart_contract_vault'),
+        t('automated_impulse_protection'),
+        t('ai_investment_recommendations'),
+        t('defi_yield_optimization'),
+        t('priority_support')
+    ];
 
     const handleSelectTier = (tier: 'free' | 'premium') => {
         setTier(tier);
@@ -42,21 +42,21 @@ export default function OnboardingPage() {
         <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-2 text-3xl font-bold text-foreground mb-2">
                 <Shield className="h-8 w-8 text-primary" />
-                <h1 className="text-4xl font-extrabold tracking-tight">Welcome to SmartGuard</h1>
+                <h1 className="text-4xl font-extrabold tracking-tight">{t('welcome_to_smartguard')}</h1>
             </div>
-            <p className="text-xl text-muted-foreground">Your Intelligent Financial Guardian, Powered by AI, Secured by Blockchain</p>
+            <p className="text-xl text-muted-foreground">{t('intelligent_financial_guardian')}</p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl w-full">
             {/* Free Tier Card */}
             <Card className="glass-card flex flex-col">
                 <CardHeader className="text-center">
-                    <Badge variant="secondary" className="w-fit mx-auto mb-2">Free Forever</Badge>
-                    <CardTitle className="text-2xl">SmartGuard Basic</CardTitle>
-                    <CardDescription>See what you spend with powerful monitoring tools.</CardDescription>
+                    <Badge variant="secondary" className="w-fit mx-auto mb-2">{t('free_forever')}</Badge>
+                    <CardTitle className="text-2xl">{t('smartguard_basic')}</CardTitle>
+                    <CardDescription>{t('see_what_you_spend')}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex-grow space-y-4">
-                    <p className="text-4xl font-bold text-center">$0<span className="text-lg font-normal text-muted-foreground">/month</span></p>
+                    <p className="text-4xl font-bold text-center">{t('price_free')}</p>
                     <ul className="space-y-2 text-sm text-muted-foreground">
                        {freeFeatures.map(feat => (
                          <li key={feat} className="flex items-start gap-2">
@@ -67,20 +67,20 @@ export default function OnboardingPage() {
                     </ul>
                 </CardContent>
                 <CardFooter>
-                    <Button onClick={() => handleSelectTier('free')} className="w-full" size="lg">Start Free</Button>
+                    <Button onClick={() => handleSelectTier('free')} className="w-full" size="lg">{t('start_free')}</Button>
                 </CardFooter>
             </Card>
 
             {/* Premium Tier Card */}
             <Card className="glass-card flex flex-col border-primary/50 neon-glow relative">
-                 <Badge className="absolute -top-3 right-6 bg-accent text-accent-foreground">Most Popular</Badge>
+                 <Badge className="absolute -top-3 right-6 bg-accent text-accent-foreground">{t('most_popular')}</Badge>
                 <CardHeader className="text-center">
-                    <Badge variant="secondary" className="w-fit mx-auto mb-2 bg-gradient-to-r from-primary to-accent text-primary-foreground border-0">First 3 Months $4.99/mo</Badge>
-                    <CardTitle className="text-2xl gradient-text">SmartGuard Premium</CardTitle>
-                    <CardDescription>Control what you spend with automated blockchain enforcement.</CardDescription>
+                    <Badge variant="secondary" className="w-fit mx-auto mb-2 bg-gradient-to-r from-primary to-accent text-primary-foreground border-0">{t('promo_price')}</Badge>
+                    <CardTitle className="text-2xl gradient-text">{t('smartguard_premium')}</CardTitle>
+                    <CardDescription>{t('control_what_you_spend')}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex-grow space-y-4">
-                     <p className="text-4xl font-bold text-center">$9.99<span className="text-lg font-normal text-muted-foreground">/month</span></p>
+                     <p className="text-4xl font-bold text-center">{t('price_premium')}</p>
                     <ul className="space-y-2 text-sm text-muted-foreground">
                        {premiumFeatures.map(feat => (
                          <li key={feat} className="flex items-start gap-2">
@@ -91,12 +91,12 @@ export default function OnboardingPage() {
                     </ul>
                 </CardContent>
                 <CardFooter>
-                    <Button onClick={() => handleSelectTier('premium')} className="w-full bg-gradient-to-r from-primary to-accent hover:opacity-90 text-primary-foreground" size="lg">Go Premium</Button>
+                    <Button onClick={() => handleSelectTier('premium')} className="w-full bg-gradient-to-r from-primary to-accent hover:opacity-90 text-primary-foreground" size="lg">{t('go_premium')}</Button>
                 </CardFooter>
             </Card>
         </div>
 
-        <Button variant="link" className="mt-8 text-muted-foreground">See detailed comparison</Button>
+        <Button variant="link" className="mt-8 text-muted-foreground">{t('see_detailed_comparison')}</Button>
     </div>
   );
 }

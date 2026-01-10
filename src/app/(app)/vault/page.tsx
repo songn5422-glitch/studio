@@ -6,9 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { format, formatDistanceToNow, isPast } from "date-fns";
-import { ShieldCheck, ArrowRight, Link as LinkIcon, Lock } from "lucide-react";
+import { ShieldCheck, Link as LinkIcon, Lock } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
+import { useLanguage } from "@/context/language-context";
 
 const Countdown = ({ unlockDate }: { unlockDate: string }) => {
     const [now, setNow] = useState(new Date());
@@ -28,6 +29,7 @@ const Countdown = ({ unlockDate }: { unlockDate: string }) => {
 
 export default function VaultPage() {
   const { vaultEntries } = useApp();
+  const { t } = useLanguage();
 
   const totalLocked = useMemo(() => {
     return vaultEntries.reduce((sum, entry) => sum + entry.amount, 0);
@@ -38,24 +40,24 @@ export default function VaultPage() {
   return (
     <div className="space-y-8">
       <PageHeader
-        title="Savings Vault"
-        description="Your secure, time-locked savings. A testament to your discipline."
+        title={t('vault_title')}
+        description={t('vault_desc')}
       />
       
       <Card className="glass-card">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <span className="flex items-center gap-2"><ShieldCheck className="h-8 w-8 text-accent"/>Vault Overview</span>
+            <span className="flex items-center gap-2"><ShieldCheck className="h-8 w-8 text-accent"/>{t('vault_overview')}</span>
           </CardTitle>
-          <CardDescription>Estimated unlock value is in USDC (stablecoin).</CardDescription>
+          <CardDescription>{t('estimated_unlock_value')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <p className="text-sm font-medium text-muted-foreground">Total Locked in Vault</p>
+            <p className="text-sm font-medium text-muted-foreground">{t('total_locked_in_vault')}</p>
             <p className="text-4xl font-bold">${totalLocked.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
           </div>
           <div>
-            <p className="text-xs text-muted-foreground">Contract Address</p>
+            <p className="text-xs text-muted-foreground">{t('contract_address')}</p>
             <div className="flex items-center gap-2">
               <p className="font-mono text-sm truncate">{vaultContractAddress}</p>
               <Button variant="ghost" size="icon" className="h-7 w-7">
@@ -67,7 +69,7 @@ export default function VaultPage() {
       </Card>
 
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold">Time-Locked Funds</h2>
+        <h2 className="text-2xl font-bold">{t('time_locked_funds')}</h2>
         {vaultEntries.map(entry => {
             const unlockDate = new Date(entry.unlockDate);
             const lockedDate = new Date(entry.lockedDate);
@@ -90,7 +92,7 @@ export default function VaultPage() {
                         <div className="space-y-1">
                            <div className="flex items-center justify-between">
                              <Badge variant={isUnlockable ? "default" : "secondary"} className={isUnlockable ? "bg-accent hover:bg-accent/90" : ""}>
-                               {isUnlockable ? 'Unlockable' : 'Locked'}
+                               {isUnlockable ? t('unlockable') : t('locked')}
                              </Badge>
                              <p className="text-xs text-muted-foreground">{format(unlockDate, 'MMM d, yyyy')}</p>
                            </div>
@@ -98,8 +100,8 @@ export default function VaultPage() {
                            {!isUnlockable && <Countdown unlockDate={entry.unlockDate} />}
                         </div>
                         <div className="flex justify-end gap-2">
-                            <Button disabled={!isUnlockable}>Withdraw</Button>
-                            <Button disabled={!isUnlockable} variant="outline">Reinvest</Button>
+                            <Button disabled={!isUnlockable}>{t('withdraw_button')}</Button>
+                            <Button disabled={!isUnlockable} variant="outline">{t('reinvest_button')}</Button>
                         </div>
                     </CardContent>
                 </Card>
