@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Camera, BotMessageSquare, CheckCheck, ShieldAlert, ArrowRight, Search, Globe, Activity, BrainCircuit, ShieldCheck as ShieldCheckIcon, AlertTriangle, X, VenetianMask } from 'lucide-react';
+import { Camera, BotMessageSquare, CheckCheck, ShieldAlert, ArrowRight, Search, Globe, Activity, BrainCircuit, ShieldCheck as ShieldCheckIcon, AlertTriangle, X } from 'lucide-react';
 import { useApp } from '@/hooks/use-app';
 import { categorizePurchase, CategorizePurchaseOutput } from '@/ai/flows/categorize-purchase-with-ai';
 import { useToast } from '@/hooks/use-toast';
@@ -21,6 +21,7 @@ import {
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/context/language-context';
 import { Progress } from '@/components/ui/progress';
+import { Badge } from '../ui/badge';
 
 type AnalysisResult = CategorizePurchaseOutput & {
   productName: string;
@@ -272,7 +273,7 @@ export function PurchaseScanner() {
               </Card>
 
               <div className="mt-8 flex gap-4 justify-center">
-                   <Button onClick={() => setShowMindfulnessTimer(false)} variant="outline" size="lg">Cancel Purchase</Button>
+                   <Button onClick={resetScanner} variant="outline" size="lg">Cancel Purchase</Button>
                    <Button 
                        onClick={handleLockAndPurchase} 
                        size="lg" 
@@ -328,7 +329,7 @@ export function PurchaseScanner() {
             </div>
             
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-                 <Button onClick={() => {}} variant="outline" size="lg" className="order-2 sm:order-1">
+                 <Button onClick={resetScanner} variant="outline" size="lg" className="order-2 sm:order-1">
                     <ArrowRight className="mr-2 h-4 w-4 rotate-180" />
                     Cancel Purchase
                  </Button>
