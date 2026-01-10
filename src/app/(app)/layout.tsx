@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NavLinks } from '@/components/layout/nav-links';
 import { Header } from '@/components/layout/header';
 import { Logo } from '@/components/icons/logo';
@@ -16,14 +16,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user } = useApp();
   const router = useRouter();
 
-  if (!user.onboardingCompleted) {
-    // This should be handled by the context, but as a fallback
-    router.push('/onboarding');
-    return null; 
-  }
-  
-  if (user.tier === 'premium' && !user.economicProfile.contractSignedAt) {
-    router.push('/onboarding/economic-profile');
+  useEffect(() => {
+    if (!user.onboardingCompleted) {
+      router.push('/onboarding');
+    } else if (user.tier === 'premium' && !user.economicProfile.contractSignedAt) {
+      router.push('/onboarding/economic-profile');
+    }
+  }, [user.onboardingCompleted, user.tier, user.economicProfile.contractSignedAt, router]);
+
+
+  if (!user.onboardingCompleted || (user.tier === 'premium' && !user.economicProfile.contractSignedAt)) {
+    // Render nothing or a loading spinner while redirecting
     return null;
   }
 
