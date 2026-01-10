@@ -118,14 +118,16 @@ export const dictionary: Dictionary = {
         'view_details': 'View details',
 
         // Vault
-        'vault_title': 'Savings Vault',
-        'vault_desc': 'Your secure, time-locked savings. A testament to your discipline.',
+        'vault_title': 'Yield Vault',
+        'vault_desc': 'Your secure, time-locked savings earning passive yield on DeFi protocols.',
         'vault_overview': 'Vault Overview',
         'estimated_unlock_value': 'Estimated unlock value is in USDC (stablecoin).',
-        'total_locked_in_vault': 'Total Locked in Vault',
+        'total_locked_in_vault': 'Total Principal Locked',
+        'total_yield_earned': 'Total Yield Earned',
         'contract_address': 'Contract Address',
-        'time_locked_funds': 'Time-Locked Funds',
+        'time_locked_funds': 'Time-Locked Positions',
         'unlockable': 'Unlockable',
+        'earning': 'Earning',
         'withdraw_button': 'Withdraw',
         'reinvest_button': 'Reinvest',
 
@@ -289,14 +291,16 @@ export const dictionary: Dictionary = {
         'view_details': 'Xem chi tiết',
 
         // Vault
-        'vault_title': 'Khoản tiết kiệm',
-        'vault_desc': 'Các khoản tiết kiệm bị khóa theo thời gian. Một minh chứng cho kỷ luật của bạn.',
+        'vault_title': 'Khoản tiết kiệm lợi nhuận',
+        'vault_desc': 'Các khoản tiết kiệm bị khóa theo thời gian an toàn của bạn kiếm lợi nhuận thụ động trên các giao thức DeFi.',
         'vault_overview': 'Tổng quan Khoản tiết kiệm',
         'estimated_unlock_value': 'Giá trị mở khóa ước tính bằng USDC (stablecoin).',
-        'total_locked_in_vault': 'Tổng tiền bị khóa',
+        'total_locked_in_vault': 'Tổng vốn gốc đã khóa',
+        'total_yield_earned': 'Tổng lợi nhuận kiếm được',
         'contract_address': 'Địa chỉ hợp đồng',
-        'time_locked_funds': 'Quỹ bị khóa theo thời gian',
+        'time_locked_funds': 'Các vị thế bị khóa theo thời gian',
         'unlockable': 'Có thể mở khóa',
+        'earning': 'Đang sinh lời',
         'withdraw_button': 'Rút tiền',
         'reinvest_button': 'Tái đầu tư',
 

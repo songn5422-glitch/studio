@@ -19,8 +19,11 @@ export type VaultEntry = {
   amount: number;
   lockedDate: string;
   unlockDate: string;
-  status: 'Locked' | 'Unlockable';
+  status: 'Locked' | 'Unlockable' | 'Earning';
   originTransactionId: string;
+  protocol?: 'Aave' | 'Compound';
+  apy?: number;
+  accruedInterest?: number;
 };
 
 export type Settings = {
@@ -38,7 +41,7 @@ export type ConnectedAccount = {
   name: string;
   accountNumber: string;
   type: string;
-  balance: number;
+  balance?: number;
 };
 
 export type User = {
