@@ -12,6 +12,8 @@ import { AiInsights } from '@/components/analytics/ai-insights';
 import { Button } from '@/components/ui/button';
 import { Lock, Star } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { DniGauge } from '@/components/dashboard/dni-gauge';
+import { VaultYieldCard } from '@/components/dashboard/vault-yield-card';
 
 
 export default function DashboardPage() {
@@ -67,8 +69,8 @@ export default function DashboardPage() {
       />
       <AccountOverview />
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-        <ProtectionStatus />
-        <AiInsights />
+        <DniGauge />
+        <VaultYieldCard />
       </div>
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
          <div className="lg:col-span-2">
