@@ -119,7 +119,7 @@ export function AccountOverview() {
         </div>
          {user.tier === 'free' && (
             <div className="mt-4 space-y-2">
-                {user.connectedBanks.map(bank => {
+                {user.connectedBanks.map((bank) => {
                     const balance = bank.balance || 0;
                     return (
                         <div key={bank.id} className="flex justify-between items-center text-sm p-2 bg-background/50 rounded-md">
