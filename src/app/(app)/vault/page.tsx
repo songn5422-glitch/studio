@@ -39,7 +39,7 @@ export default function VaultPage() {
   const { t } = useLanguage();
 
   const { totalLocked, totalInterest } = useMemo(() => {
-    const totalLocked = vaultEntries.reduce((sum, entry) => sum + entry.principal, 0);
+    const totalLocked = vaultEntries.reduce((sum, entry) => sum + (entry.principal || entry.amount), 0);
     const totalInterest = vaultEntries.reduce((sum, entry) => sum + (entry.accruedInterest || 0), 0);
     return { totalLocked, totalInterest };
   }, [vaultEntries]);
@@ -101,7 +101,9 @@ export default function VaultPage() {
             const totalDuration = unlockDate.getTime() - lockedDate.getTime();
             const elapsed = new Date().getTime() - lockedDate.getTime();
             const progress = totalDuration > 0 ? Math.min((elapsed / totalDuration) * 100, 100) : 100;
-            const currentValue = entry.principal + (entry.accruedInterest || 0);
+            
+            const principal = entry.principal || entry.amount;
+            const currentValue = principal + (entry.accruedInterest || 0);
 
             return (
                 <Card key={entry.id} className="glass-card">
@@ -109,7 +111,7 @@ export default function VaultPage() {
                         <div className="md:col-span-2 space-y-1">
                             <p className="text-xl font-bold">${currentValue.toFixed(2)}</p>
                              <div className="flex items-center gap-2">
-                                <p className="text-sm text-muted-foreground">Principal: ${entry.principal.toFixed(2)}</p>
+                                <p className="text-sm text-muted-foreground">Principal: ${(entry.principal || entry.amount).toFixed(2)}</p>
                                 <p className="text-sm text-green-400">(+${(entry.accruedInterest || 0).toFixed(2)})</p>
                              </div>
                             <div className="flex items-center gap-2">
