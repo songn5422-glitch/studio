@@ -16,11 +16,11 @@ export function ProtectionStatus() {
     oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
     return transactions
       .filter(t => t.category === 'Want' && new Date(t.date) > oneMonthAgo)
-      .reduce((sum, t) => sum + t.amount, 0);
+      .reduce((sum, t) => sum + Math.abs(t.amount), 0);
   }, [transactions]);
   
   const wantsBudget = settings.wantsBudget;
-  const percentageUsed = Math.min((wantsSpendingThisMonth / wantsBudget) * 100, 100);
+  const percentageUsed = wantsBudget > 0 ? Math.min((wantsSpendingThisMonth / wantsBudget) * 100, 100) : 0;
 
   const getStatus = () => {
     if (percentageUsed > 70) {

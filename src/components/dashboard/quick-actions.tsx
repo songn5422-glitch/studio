@@ -5,7 +5,7 @@ import { ScanLine, ShieldCheck, Cog, Lock, BarChart2 } from 'lucide-react';
 import Link from 'next/link';
 import { useLanguage } from '@/context/language-context';
 import { useApp } from '@/hooks/use-app';
-import { Card, CardContent } from '../ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 
 export function QuickActions() {
   const { t } = useLanguage();
@@ -21,11 +21,25 @@ export function QuickActions() {
                 </Link>
             </Button>
             <Button asChild size="lg" variant="secondary" className="h-16 text-lg w-full">
-                <Link href="/transactions">
+                <Link href="/analytics">
                     <BarChart2 className="mr-3 h-6 w-6" />
-                    {t('view_all_transactions')}
+                    {t('view_spending_analysis')}
                 </Link>
             </Button>
+             <Card className="glass-card text-center p-4">
+                <CardHeader className="p-2">
+                     <div className="mx-auto bg-primary/20 rounded-full h-12 w-12 flex items-center justify-center mb-2">
+                        <Lock className="h-6 w-6 text-primary"/>
+                    </div>
+                    <CardTitle className="text-base">Want automated savings?</CardTitle>
+                </CardHeader>
+                <CardContent className="p-2">
+                    <Button size="sm" className="w-full">
+                        <ScanLine className="mr-2 h-4 w-4" />
+                        Upgrade to Scan
+                    </Button>
+                </CardContent>
+            </Card>
         </div>
       );
   }

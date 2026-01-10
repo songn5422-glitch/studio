@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Camera, BotMessageSquare, Sparkles, CheckCheck, ShieldAlert, ArrowRight } from 'lucide-react';
+import { Camera, BotMessageSquare, Sparkles, CheckCheck, ShieldAlert, ArrowRight, Search, Globe, Activity, BrainCircuit, ShieldCheck as ShieldCheckIcon, AlertTriangle } from 'lucide-react';
 import { useApp } from '@/hooks/use-app';
 import { categorizePurchase, CategorizePurchaseOutput } from '@/ai/flows/categorize-purchase-with-ai';
 import { useToast } from '@/hooks/use-toast';
@@ -27,20 +27,46 @@ type AnalysisResult = CategorizePurchaseOutput & {
   oraclePrice: number;
 };
 
+const analysisSteps = [
+  { id: 'product', text: 'Identifying product...', icon: Search, detail: 'Verified via image recognition AI' },
+  { id: 'oracle', text: 'Fetching market prices via Oracle Network...', icon: Globe, detail: 'Scanning 15 retailers for best price' },
+  { id: 'ped', text: 'Fetching Price Elasticity of Demand...', icon: Activity, detail: 'Oracle source: Economic Data API' },
+  { id: 'utility', text: 'Calculating utility for your economic profile...', icon: BrainCircuit, detail: 'Analyzing occupational necessity multipliers' },
+  { id: 'dni', text: 'Generating Dynamic Necessity Index...', icon: ShieldCheckIcon, detail: 'Purchase necessity score generated' },
+];
+
 export function PurchaseScanner() {
-  const { settings, transactions, addTransaction, addVaultEntry } = useApp();
-  const [isPending, startTransition] = useTransition();
+  const { settings, transactions, addTransaction, addVaultEntry, user } = useApp();
+  const [isScanning, startScanning] = useTransition();
   const [productName, setProductName] = useState('');
   const [price, setPrice] = useState('');
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [showWarningModal, setShowWarningModal] = useState(false);
   const [isLocking, setIsLocking] = useState(false);
   const [purchaseComplete, setPurchaseComplete] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
   const { toast } = useToast();
 
   const wantsSpendingThisMonth = transactions
     .filter(t => t.category === 'Want' && new Date(t.date) > new Date(new Date().setMonth(new Date().getMonth() - 1)))
-    .reduce((sum, t) => sum + t.amount, 0);
+    .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+
+  useEffect(() => {
+    if (isScanning) {
+      setCurrentStep(0);
+      const interval = setInterval(() => {
+        setCurrentStep(prev => {
+          if (prev >= analysisSteps.length -1) {
+            clearInterval(interval);
+            return prev;
+          }
+          return prev + 1;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [isScanning]);
+
 
   const handleAnalysis = () => {
     const priceValue = parseFloat(price);
@@ -49,8 +75,11 @@ export function PurchaseScanner() {
       return;
     }
 
-    startTransition(async () => {
+    startScanning(async () => {
       setResult(null);
+      // Simulate Deep Scan time
+      await new Promise(resolve => setTimeout(resolve, analysisSteps.length * 1000));
+      
       const res = await categorizePurchase({ productName, price: priceValue });
       if (res) {
         setResult({
@@ -79,7 +108,7 @@ export function PurchaseScanner() {
     // Purchase under threshold
     addTransaction({
       product: result.productName,
-      amount: result.price,
+      amount: result.price * -1,
       category: result.category,
       aiReasoning: result.reasoning,
       status: 'Approved',
@@ -99,7 +128,7 @@ export function PurchaseScanner() {
       const txId = `txn_${Date.now()}`;
       addTransaction({
         product: result.productName,
-        amount: result.price,
+        amount: result.price * -1,
         category: result.category,
         aiReasoning: result.reasoning,
         status: 'Locked',
@@ -111,6 +140,7 @@ export function PurchaseScanner() {
 
       if (lockedAmount > 0) {
         addVaultEntry({
+          principal: lockedAmount,
           amount: lockedAmount,
           lockedDate: new Date().toISOString(),
           unlockDate: new Date(Date.now() + settings.lockDuration * 24 * 60 * 60 * 1000).toISOString(),
@@ -132,12 +162,24 @@ export function PurchaseScanner() {
     setPurchaseComplete(false);
   }
 
-  if (isPending) {
+  if (isScanning) {
     return (
         <Card className="glass-card flex min-h-[400px] flex-col items-center justify-center p-6 text-center">
-            <Sparkles className="h-12 w-12 animate-pulse text-primary" />
-            <p className="mt-4 text-lg font-semibold">Analyzing Purchase...</p>
-            <p className="text-muted-foreground">Fetching price from Oracle, and categorizing with AI...</p>
+            <h2 className="text-2xl font-bold gradient-text mb-2">Deep Economic Scan in Progress</h2>
+            <p className="text-muted-foreground mb-6">Guardian AI is analyzing your purchase...</p>
+            <div className="w-full max-w-md space-y-3">
+              {analysisSteps.map((step, index) => (
+                <div key={step.id} className={cn("flex items-center gap-4 transition-opacity", currentStep >= index ? 'opacity-100' : 'opacity-40')}>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20">
+                    {currentStep > index ? <CheckCheck className="h-5 w-5 text-primary" /> : <step.icon className="h-5 w-5 text-primary animate-pulse" />}
+                  </div>
+                  <div className="flex-1 text-left">
+                    <p className="font-semibold">{step.text}</p>
+                    <p className="text-xs text-muted-foreground">{step.detail}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
         </Card>
     );
   }
@@ -148,15 +190,17 @@ export function PurchaseScanner() {
         <Card className="glass-card flex min-h-[400px] flex-col items-center justify-center p-6 text-center">
             <CheckCheck className="h-16 w-16 text-accent" />
             <h2 className="mt-4 text-2xl font-bold">Purchase Completed</h2>
-            {latestTx.status === 'Locked' && latestTx.lockedAmount && (
+            {latestTx.status === 'Locked' && latestTx.lockedAmount ? (
                 <>
                     <p className="text-muted-foreground">
-                        ${latestTx.amount.toFixed(2)} for {latestTx.product}
+                        ${Math.abs(latestTx.amount).toFixed(2)} for {latestTx.product}
                     </p>
                     <p className="mt-2 text-lg font-semibold text-amber-400">
                         ${latestTx.lockedAmount.toFixed(2)} locked in vault.
                     </p>
                 </>
+            ) : (
+              <p className="text-muted-foreground">${Math.abs(latestTx.amount).toFixed(2)} for {latestTx.product}</p>
             )}
             <Button onClick={resetScanner} className="mt-6">
                 Scan Another Purchase <ArrowRight className="ml-2 h-4 w-4" />
@@ -193,11 +237,11 @@ export function PurchaseScanner() {
                 <p className="text-sm text-muted-foreground">Your 'Wants' spending this month: ${wantsSpendingThisMonth.toFixed(2)} / ${settings.wantsBudget.toFixed(2)}</p>
                 <div className="relative h-4 w-full rounded-full bg-muted mt-2">
                     <div className="h-4 rounded-full bg-primary/20" style={{ width: `${Math.min(progress, 100)}%` }}></div>
-                    <div className="absolute top-0 left-0 h-4 rounded-full bg-primary/20" style={{ width: `${Math.min(newProgress, 100)}%` }}>
-                        <div className="h-4 rounded-full bg-amber-400" style={{ width: `${Math.min(progress, 100)}%` }}></div>
+                    <div className="absolute top-0 left-0 h-4 rounded-full bg-primary/20" style={{ width: `${Math.min(newProgress, 100)}%`, transition: 'width 0.5s ease-in-out' }}>
+                        <div className="h-4 rounded-full bg-amber-400" style={{ width: `${(Math.min(progress, 100) / Math.min(newProgress, 100)) * 100}%` }}></div>
                     </div>
                 </div>
-                {isOverBudget && <p className="text-amber-400 text-sm mt-2 flex gap-2"><ShieldAlert className="h-4 w-4 shrink-0 mt-0.5" />This purchase will exceed your Wants limit.</p>}
+                {isOverBudget && <p className="text-amber-400 text-sm mt-2 flex gap-2"><AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />This purchase will exceed your Wants limit.</p>}
             </div>
             <div className="mt-6 flex gap-4">
                 <Button onClick={handleProceed} className="flex-1" size="lg">Proceed with Purchase</Button>
@@ -250,8 +294,8 @@ export function PurchaseScanner() {
                 <Label htmlFor="price">Price (USD)</Label>
                 <Input id="price" type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder="e.g., 399.99" />
               </div>
-              <Button onClick={handleAnalysis} disabled={isPending} className="w-full">
-                {isPending ? 'Analyzing...' : 'Analyze Purchase'}
+              <Button onClick={handleAnalysis} disabled={isScanning} className="w-full">
+                {isScanning ? 'Analyzing...' : 'Analyze Purchase'}
               </Button>
             </div>
           </TabsContent>

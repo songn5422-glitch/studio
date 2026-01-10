@@ -68,9 +68,16 @@ export default function DashboardPage() {
       <AccountOverview />
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         <ProtectionStatus />
-        <QuickActions />
+        <AiInsights />
       </div>
-      <RecentActivity />
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+         <div className="lg:col-span-2">
+            <RecentActivity />
+          </div>
+          <div className="flex items-center">
+            <QuickActions />
+          </div>
+      </div>
     </div>
   );
 }
