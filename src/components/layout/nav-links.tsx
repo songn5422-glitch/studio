@@ -65,7 +65,7 @@ export function NavLinks({ isCollapsed, isMobile = false }: { isCollapsed: boole
 
     if (isCollapsed && !isMobile) {
       return (
-        <Tooltip key={item.href}>
+        <Tooltip>
           <TooltipTrigger asChild>{LinkContent}</TooltipTrigger>
           <TooltipContent side="right" sideOffset={5}>
             {item.label}
@@ -74,16 +74,16 @@ export function NavLinks({ isCollapsed, isMobile = false }: { isCollapsed: boole
         </Tooltip>
       );
     }
-    return <div key={item.href}>{LinkContent}</div>;
+    return LinkContent;
   }
 
   return (
     <div className="flex h-full flex-col justify-between">
         <nav className="grid items-start gap-1">
-            {navItems.map(renderLink)}
+            {navItems.map(item => <div key={item.href}>{renderLink(item)}</div>)}
         </nav>
         <nav className="grid items-start gap-1">
-            {secondaryNavItems.map(renderLink)}
+            {secondaryNavItems.map(item => <div key={item.href}>{renderLink(item)}</div>)}
         </nav>
     </div>
   );
