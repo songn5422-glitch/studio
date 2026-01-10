@@ -3,7 +3,7 @@ export type Transaction = {
   date: string;
   product: string;
   amount: number;
-  category: 'Need' | 'Want' | string; // Allow general strings for free tier
+  category: 'Need' | 'Want' | 'food-dining' | 'transportation' | 'shopping' | 'bills-utilities' | 'entertainment' | 'income' | string;
   aiReasoning?: string;
   status: 'Approved' | 'Locked' | 'Refunded' | 'Posted';
   oracleVerified: boolean;
@@ -26,6 +26,7 @@ export type VaultEntry = {
 export type Settings = {
   wantsBudget: number;
   needsBudget: number;
+  totalBudget: number;
   alertThreshold: number;
   lockDuration: 7 | 14 | 30 | 60 | 90;
   autoLockEnabled: boolean;

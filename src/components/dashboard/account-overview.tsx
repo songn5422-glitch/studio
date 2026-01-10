@@ -21,7 +21,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowDown, ArrowUp } from 'lucide-react';
+import { ArrowDown, ArrowUp, RefreshCcw } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 
 export function AccountOverview() {
@@ -77,26 +77,54 @@ export function AccountOverview() {
     setAmount('');
     setWithdrawModalOpen(false);
   };
+  
+  const totalBalance = user.tier === 'free' 
+    ? user.connectedBanks.reduce((sum, bank) => sum + bank.balance, 0)
+    : user.balance;
 
   return (
     <>
       <div className="glass-card p-6 md:p-8">
         <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
           <div>
-            <p className="text-sm font-medium text-muted-foreground">{t('total_balance')}</p>
-            <p className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
-              ${user.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            <p className="text-sm font-medium text-muted-foreground">
+              {user.tier === 'free' ? t('total_linked_balance') : t('total_balance')}
             </p>
+            <p className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
+              ${totalBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </p>
+             {user.tier === 'free' && (
+                <div className="text-xs text-muted-foreground mt-2 flex items-center gap-2">
+                    <RefreshCcw className="h-3 w-3" />
+                    <span>Last synced: 2 minutes ago</span>
+                </div>
+            )}
           </div>
-          <div className="flex w-full gap-2 sm:w-auto">
-            <Button size="lg" className="w-full sm:w-auto" onClick={() => setDepositModalOpen(true)}>
-              <ArrowDown className="mr-2 h-4 w-4" /> {t('add_funds')}
+           {user.tier === 'premium' ? (
+            <div className="flex w-full gap-2 sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto" onClick={() => setDepositModalOpen(true)}>
+                <ArrowDown className="mr-2 h-4 w-4" /> {t('add_funds')}
+                </Button>
+                <Button size="lg" variant="secondary" className="w-full sm:w-auto" onClick={() => setWithdrawModalOpen(true)}>
+                <ArrowUp className="mr-2 h-4 w-4" /> {t('withdraw')}
+                </Button>
+            </div>
+           ) : (
+            <Button size="lg" variant="secondary">
+                <RefreshCcw className="mr-2 h-4 w-4" /> Sync Now
             </Button>
-            <Button size="lg" variant="secondary" className="w-full sm:w-auto" onClick={() => setWithdrawModalOpen(true)}>
-              <ArrowUp className="mr-2 h-4 w-4" /> {t('withdraw')}
-            </Button>
-          </div>
+           )}
         </div>
+         {user.tier === 'free' && (
+            <div className="mt-4 space-y-2">
+                {user.connectedBanks.map(bank => (
+                    <div key={bank.id} className="flex justify-between items-center text-sm p-2 bg-background/50 rounded-md">
+                        <span className="text-muted-foreground">{bank.name} ({bank.accountNumber})</span>
+                        <span className="font-mono text-foreground">${bank.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    </div>
+                ))}
+            </div>
+        )}
       </div>
 
       {/* Deposit Modal */}

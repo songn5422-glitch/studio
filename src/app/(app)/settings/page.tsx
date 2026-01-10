@@ -16,13 +16,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Banknote, Bell, Bot, ShieldCheck } from "lucide-react";
+import { Banknote, Bell, Bot, ShieldCheck, Lock } from "lucide-react";
 import { useLanguage } from "@/context/language-context";
 
 export default function SettingsPage() {
   const { settings, user, setState } = useApp();
   const { toast } = useToast();
   const { t } = useLanguage();
+  const isPremium = user.tier === 'premium';
 
   const handleSettingsChange = (key: keyof typeof settings, value: any) => {
     setState(prevState => ({
@@ -50,24 +51,38 @@ export default function SettingsPage() {
               <CardDescription>{t('spending_rules_desc')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="wants-budget">{t('monthly_wants_budget')}</Label>
-                <Input
-                  id="wants-budget"
-                  type="number"
-                  value={settings.wantsBudget}
-                  onChange={(e) => handleSettingsChange('wantsBudget', parseInt(e.target.value) || 0)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="needs-budget">{t('monthly_needs_budget')}</Label>
-                <Input
-                  id="needs-budget"
-                  type="number"
-                  value={settings.needsBudget}
-                  onChange={(e) => handleSettingsChange('needsBudget', parseInt(e.target.value) || 0)}
-                />
-              </div>
+               {isPremium ? (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="wants-budget">{t('monthly_wants_budget')}</Label>
+                    <Input
+                      id="wants-budget"
+                      type="number"
+                      value={settings.wantsBudget}
+                      onChange={(e) => handleSettingsChange('wantsBudget', parseInt(e.target.value) || 0)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="needs-budget">{t('monthly_needs_budget')}</Label>
+                    <Input
+                      id="needs-budget"
+                      type="number"
+                      value={settings.needsBudget}
+                      onChange={(e) => handleSettingsChange('needsBudget', parseInt(e.target.value) || 0)}
+                    />
+                  </div>
+                </>
+              ) : (
+                <div className="space-y-2">
+                    <Label htmlFor="total-budget">{t('monthly_total_budget')}</Label>
+                    <Input
+                      id="total-budget"
+                      type="number"
+                      value={settings.totalBudget}
+                      onChange={(e) => handleSettingsChange('totalBudget', parseInt(e.target.value) || 0)}
+                    />
+                </div>
+              )}
               <div className="space-y-2">
                 <Label>{t('alert_me_at')} {settings.alertThreshold}%</Label>
                 <Slider
@@ -80,7 +95,15 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
           
-          <Card className="glass-card">
+          <Card className="glass-card relative overflow-hidden">
+             {!isPremium && (
+              <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center z-10">
+                <Lock className="h-10 w-10 text-primary mb-4" />
+                <h3 className="text-xl font-bold">Unlock Vault Settings</h3>
+                <p className="text-muted-foreground mb-4">Upgrade to Premium to enable automated savings.</p>
+                <Button>{t('upgrade_to_premium')}</Button>
+              </div>
+            )}
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><ShieldCheck/> {t('vault_settings')}</CardTitle>
               <CardDescription>{t('vault_settings_desc')}</CardDescription>
@@ -116,7 +139,15 @@ export default function SettingsPage() {
         </div>
         
         <div className="space-y-8">
-            <Card className="glass-card">
+            <Card className="glass-card relative overflow-hidden">
+                {!isPremium && (
+                    <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center z-10 text-center p-4">
+                        <Lock className="h-10 w-10 text-primary mb-4" />
+                        <h3 className="text-xl font-bold">Unlock AI Preferences</h3>
+                        <p className="text-muted-foreground mb-4">Get advanced Need vs. Want categorization.</p>
+                        <Button>{t('upgrade_to_premium')}</Button>
+                    </div>
+                )}
               <CardHeader>
                 <CardTitle className="flex items-center gap-2"><Bot/> {t('ai_preferences')}</CardTitle>
               </CardHeader>
@@ -143,7 +174,7 @@ export default function SettingsPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="flex items-center justify-between"><Label>{t('budget_threshold_alerts')}</Label><Switch defaultChecked/></div>
-                    <div className="flex items-center justify-between"><Label>{t('vault_unlock_notifications')}</Label><Switch defaultChecked/></div>
+                    <div className="flex items-center justify-between"><Label>{t('vault_unlock_notifications')}</Label><Switch defaultChecked disabled={!isPremium}/></div>
                     <div className="flex items-center justify-between"><Label>{t('weekly_spending_summaries')}</Label><Switch/></div>
                 </CardContent>
             </Card>

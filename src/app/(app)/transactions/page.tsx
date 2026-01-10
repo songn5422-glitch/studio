@@ -36,7 +36,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Download, CheckCircle, XCircle, Clock } from "lucide-react";
+import { MoreHorizontal, Download, CheckCircle, XCircle, Clock, Link as LinkIcon } from "lucide-react";
 import Image from "next/image";
 import { useState, useMemo } from "react";
 import { format } from "date-fns";
@@ -69,8 +69,21 @@ export default function TransactionsPage() {
       case "Approved": return <CheckCircle className="h-5 w-5 text-accent" />;
       case "Locked": return <Clock className="h-5 w-5 text-amber-400" />;
       case "Refunded": return <XCircle className="h-5 w-5 text-destructive" />;
-      default: return null;
+      default: return <CheckCircle className="h-5 w-5 text-muted-foreground" />;
     }
+  }
+
+  const getCategoryDisplay = (category: string) => {
+    // Simple mapping for free tier categories
+    const categoryMap: {[key: string]: string} = {
+        'food-dining': 'Food & Dining',
+        'transportation': 'Transportation',
+        'shopping': 'Shopping',
+        'bills-utilities': 'Bills & Utilities',
+        'entertainment': 'Entertainment',
+        'subscriptions': 'Subscriptions',
+    };
+    return categoryMap[category] || t(category.toLowerCase()) || category;
   }
 
   return (
@@ -95,6 +108,11 @@ export default function TransactionsPage() {
               <SelectItem value="All">{t('all_categories')}</SelectItem>
               <SelectItem value="Need">{t('needs')}</SelectItem>
               <SelectItem value="Want">{t('wants')}</SelectItem>
+               <SelectItem value="food-dining">Food & Dining</SelectItem>
+                <SelectItem value="transportation">Transportation</SelectItem>
+                <SelectItem value="shopping">Shopping</SelectItem>
+                <SelectItem value="bills-utilities">Bills & Utilities</SelectItem>
+                <SelectItem value="entertainment">Entertainment</SelectItem>
             </SelectContent>
           </Select>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -104,6 +122,7 @@ export default function TransactionsPage() {
             <SelectContent>
               <SelectItem value="All">{t('all_statuses')}</SelectItem>
               <SelectItem value="Approved">{t('approved')}</SelectItem>
+              <SelectItem value="Posted">{t('posted')}</SelectItem>
               <SelectItem value="Locked">{t('locked')}</SelectItem>
               <SelectItem value="Refunded">{t('refunded')}</SelectItem>
             </SelectContent>
@@ -133,9 +152,12 @@ export default function TransactionsPage() {
                   <TableCell>
                     <Badge
                       variant={tx.category === "Need" ? "secondary" : "outline"}
-                      className={cn(tx.category === 'Want' && 'border-amber-400 text-amber-400')}
+                      className={cn(
+                        tx.category === 'Want' && 'border-amber-400 text-amber-400',
+                        tx.category !== 'Need' && tx.category !== 'Want' && 'border-sky-400 text-sky-400'
+                        )}
                     >
-                      {tx.category === 'Need' ? t('needs') : t('wants')}
+                      {getCategoryDisplay(tx.category)}
                     </Badge>
                   </TableCell>
                   <TableCell>
@@ -144,7 +166,9 @@ export default function TransactionsPage() {
                         <span>{t(tx.status.toLowerCase())}</span>
                     </div>
                   </TableCell>
-                  <TableCell className="text-right font-mono">${tx.amount.toFixed(2)}</TableCell>
+                  <TableCell className={cn("text-right font-mono", tx.amount > 0 ? "text-accent" : "text-foreground")}>
+                    {tx.amount < 0 ? '-' : ''}${Math.abs(tx.amount).toFixed(2)}
+                  </TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -185,13 +209,24 @@ export default function TransactionsPage() {
                         <Image src={getPlaceholderImage(selectedTx.productImage)!.imageUrl} alt={selectedTx.product} fill className="rounded-md object-cover"/>
                     </div>
                  )}
-                <div className="text-sm"><strong>{t('amount')}:</strong> <span className="font-mono">${selectedTx.amount.toFixed(2)}</span></div>
+                <div className="text-sm"><strong>{t('amount')}:</strong> <span className={cn("font-mono", selectedTx.amount > 0 ? "text-accent" : "text-foreground")}>{selectedTx.amount < 0 ? '-' : ''}${Math.abs(selectedTx.amount).toFixed(2)}</span></div>
                 <div className="text-sm"><strong>{t('date')}:</strong> {format(new Date(selectedTx.date), "PPP p")}</div>
-                <div className="text-sm"><strong>{t('category')}:</strong> {selectedTx.category === "Need" ? t('needs') : t('wants')}</div>
+                <div className="text-sm"><strong>{t('category')}:</strong> {getCategoryDisplay(selectedTx.category)}</div>
                 <div className="text-sm"><strong>{t('status')}:</strong> {t(selectedTx.status.toLowerCase())}</div>
-                <p className="rounded-md border bg-muted p-3 text-sm italic text-muted-foreground">
-                    <strong>AI Reasoning:</strong> {selectedTx.aiReasoning}
-                </p>
+                
+                {selectedTx.aiReasoning && (
+                  <p className="rounded-md border bg-muted p-3 text-sm italic text-muted-foreground">
+                      <strong>AI Reasoning:</strong> {selectedTx.aiReasoning}
+                  </p>
+                )}
+
+                {selectedTx.oracleVerified && (
+                  <div className="flex items-center gap-2 text-sm text-accent">
+                    <CheckCircle className="h-4 w-4" />
+                    <span>Verified by Oracle Network</span>
+                  </div>
+                )}
+
                 {selectedTx.lockedAmount && (
                     <div className="text-sm text-amber-400"><strong>Locked Amount:</strong> ${selectedTx.lockedAmount.toFixed(2)}</div>
                 )}
@@ -200,7 +235,10 @@ export default function TransactionsPage() {
                 )}
                 {selectedTx.blockchainTxHash && (
                     <div className="text-sm">
-                        <strong>Tx Hash:</strong> 
+                        <div className="flex items-center gap-2">
+                          <LinkIcon className="h-4 w-4" />
+                          <strong>Tx Hash:</strong> 
+                        </div>
                         <a href="#" className="ml-2 text-primary hover:underline truncate block">{selectedTx.blockchainTxHash}</a>
                     </div>
                 )}

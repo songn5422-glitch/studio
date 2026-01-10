@@ -35,6 +35,12 @@
       "description": "Car at a gas station",
       "imageUrl": "https://images.unsplash.com/photo-1665965626265-3be8d74d6cd6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjYXIlMjBnYXN8ZW58MHx8fHwxNzY3OTY5NzAzfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "car gas"
+    },
+    {
+      "id": "shopping",
+      "description": "Online shopping package",
+      "imageUrl": "https://images.unsplash.com/photo-1599321568281-366551b4742a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzaG9wcGluZyUyMHBhY2thZ2V8ZW58MHx8fHwxNzY3OTY5NzAzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "shopping package"
     }
   ]
 }

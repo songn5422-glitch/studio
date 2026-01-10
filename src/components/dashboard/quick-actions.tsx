@@ -1,12 +1,42 @@
 "use client";
 
 import { Button } from '@/components/ui/button';
-import { ScanLine, ShieldCheck, Cog } from 'lucide-react';
+import { ScanLine, ShieldCheck, Cog, Lock } from 'lucide-react';
 import Link from 'next/link';
 import { useLanguage } from '@/context/language-context';
+import { useApp } from '@/hooks/use-app';
+import { Card, CardContent } from '../ui/card';
 
 export function QuickActions() {
   const { t } = useLanguage();
+  const { user } = useApp();
+
+  if (user.tier === 'free') {
+      return (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Button asChild size="lg" className="h-20 text-lg">
+                <Link href="/settings">
+                    <Cog className="mr-3 h-6 w-6" />
+                    {t('set_budget_goals')}
+                </Link>
+            </Button>
+            <Button asChild size="lg" variant="secondary" className="h-20 text-lg">
+                <Link href="/transactions">
+                    <ScanLine className="mr-3 h-6 w-6" />
+                    {t('view_all_transactions')}
+                </Link>
+            </Button>
+            <Card className="sm:col-span-2 bg-primary/10 border-primary/20 p-4 flex items-center justify-center text-center">
+                <p className="text-sm">
+                    <Lock className="inline-block h-4 w-4 mr-2"/>
+                    Want automated savings protection?{' '}
+                    <Button variant="link" className="p-0 h-auto text-primary">Upgrade to Premium</Button>
+                </p>
+            </Card>
+        </div>
+      );
+  }
+
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
       <Button asChild size="lg" className="h-20 text-lg">

@@ -2,14 +2,16 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Check, Shield } from 'lucide-react';
+import { Check, Shield, Wallet } from 'lucide-react';
 import { useApp } from '@/hooks/use-app';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/context/language-context';
+import { useState } from 'react';
 
 export default function OnboardingPage() {
-    const { setTier, completeOnboarding } = useApp();
+    const { user, setTier, connectWallet, completeOnboarding } = useApp();
     const { t } = useLanguage();
+    const [selectedTier, setSelectedTier] = useState<'free' | 'premium' | null>(null);
 
     const freeFeatures = [
         t('link_unlimited_accounts'),
@@ -34,7 +36,55 @@ export default function OnboardingPage() {
 
     const handleSelectTier = (tier: 'free' | 'premium') => {
         setTier(tier);
+        setSelectedTier(tier);
+    }
+    
+    const handleConnectAndFinish = () => {
+        connectWallet();
         completeOnboarding();
+    }
+
+    if (selectedTier) {
+      return (
+        <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 sm:p-8">
+             <div className="text-center mb-8">
+                <div className="flex items-center justify-center gap-2 text-3xl font-bold text-foreground mb-2">
+                    <Shield className="h-8 w-8 text-primary" />
+                    <h1 className="text-4xl font-extrabold tracking-tight">One Last Step</h1>
+                </div>
+                <p className="text-xl text-muted-foreground">Connect your wallet to secure your account.</p>
+            </div>
+            <Card className="glass-card max-w-md w-full">
+                <CardHeader>
+                    <CardTitle>Connect Your Wallet</CardTitle>
+                    <CardDescription>
+                        We use the blockchain to ensure your financial data is transparent and secure. Your wallet is your key.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    {user.walletAddress ? (
+                         <div className="flex items-center justify-center flex-col gap-4 p-4 bg-muted rounded-lg text-center">
+                            <Check className="h-12 w-12 text-accent"/>
+                            <p className="font-semibold">Wallet Connected!</p>
+                            <p className="text-sm text-muted-foreground">{`${user.walletAddress.slice(0, 6)}...${user.walletAddress.slice(-4)}`}</p>
+                        </div>
+                    ) : (
+                        <p className="text-muted-foreground text-center py-8">Your wallet is required to continue.</p>
+                    )}
+                </CardContent>
+                <CardFooter>
+                    {user.walletAddress ? (
+                        <Button onClick={completeOnboarding} className="w-full" size="lg">Go to Dashboard</Button>
+                    ) : (
+                        <Button onClick={connectWallet} className="w-full neon-glow" size="lg">
+                            <Wallet className="mr-2 h-4 w-4" />
+                            Connect Wallet
+                        </Button>
+                    )}
+                </CardFooter>
+            </Card>
+        </div>
+      )
     }
 
   return (
