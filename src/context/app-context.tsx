@@ -27,6 +27,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
           ...parsedState,
           user: {...prevState.user, ...parsedState.user, economicProfile: {...prevState.user.economicProfile, ...parsedState.user.economicProfile}},
           settings: {...prevState.settings, ...parsedState.settings},
+          dniEngine: {...prevState.dniEngine, ...parsedState.dniEngine}
         }));
       }
     } catch (error) {
@@ -69,8 +70,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const disconnectWallet = () => {
     setState(prevState => ({
       ...prevState,
-      user: { ...prevState.user, walletAddress: null, onboardingCompleted: false, tier: 'free' } // Reset on disconnect
+      user: { ...MOCK_DATA.user } // Reset user state completely on disconnect
     }));
+    router.push('/onboarding');
     toast({
       title: "Wallet Disconnected",
     });
@@ -83,12 +85,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
         id: `txn_${Date.now()}`,
         date: new Date().toISOString(),
       };
-      const newBalance = prevState.user.balance - transaction.amount;
+      
+      const updatedBalance = prevState.user.tier === 'premium' ? prevState.user.balance + newTransaction.amount : prevState.user.balance;
+
       return {
         ...prevState,
         user: {
             ...prevState.user,
-            balance: newBalance
+            balance: updatedBalance
         },
         transactions: [newTransaction, ...prevState.transactions],
       };
@@ -117,11 +121,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
       ...prevState,
       user: { ...prevState.user, tier }
     }));
-    if (tier === 'premium') {
+    if (tier === 'premium' && !state.user.onboardingCompleted) {
+        // If they are upgrading during onboarding, move them to wallet connect
+    } else if (tier === 'premium') {
       toast({
         title: `Switched to Premium Plan`,
         description: "All premium features are now unlocked!"
       })
+      if (!state.user.economicProfile.contractSignedAt) {
+        router.push('/onboarding/economic-profile');
+      }
     }
   };
 

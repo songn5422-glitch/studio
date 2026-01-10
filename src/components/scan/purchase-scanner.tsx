@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Camera, BotMessageSquare, Sparkles, CheckCheck, ShieldAlert, ArrowRight, Search, Globe, Activity, BrainCircuit, ShieldCheck as ShieldCheckIcon, AlertTriangle } from 'lucide-react';
+import { Camera, BotMessageSquare, CheckCheck, ShieldAlert, ArrowRight, Search, Globe, Activity, BrainCircuit, ShieldCheck as ShieldCheckIcon, AlertTriangle } from 'lucide-react';
 import { useApp } from '@/hooks/use-app';
 import { categorizePurchase, CategorizePurchaseOutput } from '@/ai/flows/categorize-purchase-with-ai';
 import { useToast } from '@/hooks/use-toast';
@@ -19,7 +19,8 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
-import { Progress } from '../ui/progress';
+import { useLanguage } from '@/context/language-context';
+
 
 type AnalysisResult = CategorizePurchaseOutput & {
   productName: string;
@@ -28,11 +29,11 @@ type AnalysisResult = CategorizePurchaseOutput & {
 };
 
 const analysisSteps = [
-  { id: 'product', text: 'Identifying product...', icon: Search, detail: 'Verified via image recognition AI' },
-  { id: 'oracle', text: 'Fetching market prices via Oracle Network...', icon: Globe, detail: 'Scanning 15 retailers for best price' },
-  { id: 'ped', text: 'Fetching Price Elasticity of Demand...', icon: Activity, detail: 'Oracle source: Economic Data API' },
-  { id: 'utility', text: 'Calculating utility for your economic profile...', icon: BrainCircuit, detail: 'Analyzing occupational necessity multipliers' },
-  { id: 'dni', text: 'Generating Dynamic Necessity Index...', icon: ShieldCheckIcon, detail: 'Purchase necessity score generated' },
+  { id: 'product', text: 'Identifying product...', detail: 'Verified via image recognition AI', icon: Search },
+  { id: 'oracle', text: 'Fetching market prices via Oracle Network...', detail: 'Scanning 15 retailers for best price', icon: Globe },
+  { id: 'ped', text: 'Fetching Price Elasticity of Demand...', detail: 'Oracle source: Economic Data API', icon: Activity },
+  { id: 'utility', text: 'Calculating utility for your economic profile...', detail: 'Analyzing occupational necessity multipliers', icon: BrainCircuit },
+  { id: 'dni', text: 'Generating Dynamic Necessity Index...', detail: 'Purchase necessity score generated', icon: ShieldCheckIcon },
 ];
 
 export function PurchaseScanner() {
@@ -46,6 +47,7 @@ export function PurchaseScanner() {
   const [purchaseComplete, setPurchaseComplete] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const wantsSpendingThisMonth = transactions
     .filter(t => t.category === 'Want' && new Date(t.date) > new Date(new Date().setMonth(new Date().getMonth() - 1)))
@@ -144,8 +146,10 @@ export function PurchaseScanner() {
           amount: lockedAmount,
           lockedDate: new Date().toISOString(),
           unlockDate: new Date(Date.now() + settings.lockDuration * 24 * 60 * 60 * 1000).toISOString(),
-          status: 'Locked',
+          status: 'Earning',
           originTransactionId: txId,
+          protocol: Math.random() > 0.5 ? 'Aave' : 'Compound',
+          apy: 3.5 + Math.random() * 1.5,
         });
       }
 
@@ -228,7 +232,7 @@ export function PurchaseScanner() {
                 </div>
                 <div>
                     <h3 className="font-semibold">AI Categorization</h3>
-                    <Badge className={cn("text-lg", isWant ? 'border-amber-400 text-amber-400' : 'border-accent text-accent')} variant="outline">{result.category}</Badge>
+                    <div className={cn("inline-flex items-center rounded-full border px-2.5 py-0.5 text-lg font-semibold", isWant ? 'border-amber-400 text-amber-400' : 'border-accent text-accent')} >{t(result.category.toLowerCase())}</div>
                     <p className="text-sm text-muted-foreground mt-2 flex gap-2"><BotMessageSquare className="h-4 w-4 shrink-0 mt-0.5" />{result.reasoning}</p>
                 </div>
             </div>

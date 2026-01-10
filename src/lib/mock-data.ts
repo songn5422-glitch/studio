@@ -8,7 +8,7 @@ export const MOCK_DATA: AppState = {
   user: {
     walletAddress: null,
     balance: 2450.0,
-    tier: 'premium', // Default to premium for existing setup
+    tier: 'free', // Start as free user by default
     onboardingCompleted: false, // Will be set to true after onboarding
     connectedBanks: [
       { id: 'bank1', name: 'Chase Bank', accountNumber: '****1234', type: 'Checking', balance: 3250.00 },
