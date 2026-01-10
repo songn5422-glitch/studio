@@ -1,3 +1,4 @@
+
 "use client";
 
 import { PageHeader } from "@/components/dashboard/page-header";
@@ -75,7 +76,7 @@ export default function TransactionsPage() {
   }
 
   const getCategoryDisplay = (category: string) => {
-    if (!isPremium) {
+    if (!isPremium && category !== 'Need' && category !== 'Want') {
         const categoryMap: {[key: string]: string} = {
             'food-dining': 'Food & Dining',
             'transportation': 'Transportation',
@@ -83,7 +84,8 @@ export default function TransactionsPage() {
             'bills-utilities': 'Bills & Utilities',
             'entertainment': 'Entertainment',
             'subscriptions': 'Subscriptions',
-            'income': 'Income'
+            'income': 'Income',
+            'clothing': 'Clothing',
         };
         return categoryMap[category] || category;
     }
@@ -123,6 +125,8 @@ export default function TransactionsPage() {
                   <SelectItem value="bills-utilities">Bills & Utilities</SelectItem>
                   <SelectItem value="entertainment">Entertainment</SelectItem>
                   <SelectItem value="subscriptions">Subscriptions</SelectItem>
+                  <SelectItem value="clothing">Clothing</SelectItem>
+                  <SelectItem value="income">Income</SelectItem>
                 </>
               )}
             </SelectContent>
@@ -262,3 +266,4 @@ export default function TransactionsPage() {
     </div>
   );
 }
+

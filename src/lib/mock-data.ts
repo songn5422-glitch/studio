@@ -1,3 +1,4 @@
+
 import type { AppState } from '@/lib/types';
 
 const now = new Date();
@@ -14,6 +15,15 @@ export const MOCK_DATA: AppState = {
       { id: 'bank2', name: 'Wells Fargo', accountNumber: '****5678', type: 'Savings', balance: 12500.00 },
       { id: 'bank3', name: 'Chase Bank', accountNumber: '****9012', type: 'Credit Card', balance: -1450.00 },
     ],
+    economicProfile: {
+      occupation: "Software Engineer",
+      incomeLevel: "mid",
+      dependents: 0,
+      guardianEnabled: false,
+      guardianAddress: null,
+      disciplineContractHash: null,
+      contractSignedAt: null,
+    }
   },
   settings: {
     wantsBudget: 600,
@@ -62,7 +72,7 @@ export const MOCK_DATA: AppState = {
       date: new Date(now.setDate(now.getDate() - 4)).toISOString(),
       product: 'Zara - Winter Coat',
       amount: -150.0,
-      category: 'Want',
+      category: 'clothing',
       aiReasoning: 'Fashion item, can be considered a want if not replacing a critical item.',
       status: 'Approved',
       oracleVerified: true,
@@ -73,7 +83,7 @@ export const MOCK_DATA: AppState = {
       date: new Date(now.setDate(now.getDate() - 5)).toISOString(),
       product: 'Netflix Subscription',
       amount: -15.49,
-      category: 'bills-utilities',
+      category: 'subscriptions',
       aiReasoning: 'Recurring entertainment subscription.',
       status: 'Posted',
       oracleVerified: true,
@@ -136,6 +146,7 @@ export const MOCK_DATA: AppState = {
   vaultEntries: [
     {
       id: 'vault_001',
+      principal: 199.99,
       amount: 199.99,
       lockedDate: new Date(now.setDate(now.getDate() - 6)).toISOString(),
       unlockDate: new Date(new Date().getTime() + 24 * 24 * 60 * 60 * 1000).toISOString(),
@@ -147,6 +158,7 @@ export const MOCK_DATA: AppState = {
     },
     {
       id: 'vault_002',
+      principal: 250,
       amount: 250,
       lockedDate: new Date(oneMonthAgo.setDate(oneMonthAgo.getDate() - 15)).toISOString(),
       unlockDate: new Date(new Date().getTime() + 5 * 24 * 60 * 60 * 1000).toISOString(),
@@ -158,6 +170,7 @@ export const MOCK_DATA: AppState = {
     },
     {
       id: 'vault_003',
+      principal: 100,
       amount: 100,
       lockedDate: new Date(oneMonthAgo.setDate(oneMonthAgo.getDate() - 30)).toISOString(),
       unlockDate: new Date(new Date().getTime() - 10 * 24 * 60 * 60 * 1000).toISOString(),
@@ -168,4 +181,20 @@ export const MOCK_DATA: AppState = {
       accruedInterest: 0.98,
     },
   ],
+  dniEngine: {
+    currentScore: 0.68,
+    occupationMultipliers: {
+      "Software Engineer": { electronics: 1.2, books: 1.3, food: 1.0 },
+      "Student": { books: 1.5, food: 1.0, entertainment: 0.8 },
+      "Photographer": { electronics: 1.4, travel: 1.2, food: 1.0 }
+    },
+    categoryBaselineNecessity: {
+      "food-dining": 0.85,
+      "healthcare": 0.95,
+      "transportation": 0.75,
+      "electronics": 0.45,
+      "entertainment": 0.30,
+      "clothing": 0.60
+    }
+  },
 };

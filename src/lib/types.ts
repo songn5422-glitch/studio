@@ -1,9 +1,10 @@
+
 export type Transaction = {
   id: string;
   date: string;
   product: string;
   amount: number;
-  category: 'Need' | 'Want' | 'food-dining' | 'transportation' | 'shopping' | 'bills-utilities' | 'entertainment' | 'income' | string;
+  category: 'Need' | 'Want' | 'food-dining' | 'transportation' | 'shopping' | 'bills-utilities' | 'entertainment' | 'income' | 'clothing' | 'subscriptions' | string;
   aiReasoning?: string;
   status: 'Approved' | 'Locked' | 'Refunded' | 'Posted';
   oracleVerified: boolean;
@@ -16,6 +17,7 @@ export type Transaction = {
 
 export type VaultEntry = {
   id: string;
+  principal: number;
   amount: number;
   lockedDate: string;
   unlockDate: string;
@@ -44,12 +46,29 @@ export type ConnectedAccount = {
   balance?: number;
 };
 
+export type EconomicProfile = {
+  occupation: string;
+  incomeLevel: 'low' | 'mid' | 'high' | null;
+  dependents: number;
+  guardianEnabled: boolean;
+  guardianAddress: string | null;
+  disciplineContractHash: string | null;
+  contractSignedAt: string | null;
+}
+
+export type DNI_Engine = {
+  currentScore: number;
+  occupationMultipliers: Record<string, Record<string, number>>;
+  categoryBaselineNecessity: Record<string, number>;
+}
+
 export type User = {
   walletAddress: string | null;
   balance: number;
   tier: 'free' | 'premium';
   onboardingCompleted: boolean;
   connectedBanks: ConnectedAccount[];
+  economicProfile: EconomicProfile;
 };
 
 export type AppState = {
@@ -57,6 +76,7 @@ export type AppState = {
   settings: Settings;
   transactions: Transaction[];
   vaultEntries: VaultEntry[];
+  dniEngine: DNI_Engine;
 };
 
 export type Language = 'en' | 'vi';

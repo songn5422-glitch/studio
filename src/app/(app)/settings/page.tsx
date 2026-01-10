@@ -1,3 +1,4 @@
+
 "use client";
 
 import { PageHeader } from "@/components/dashboard/page-header";
@@ -16,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Banknote, Bell, Bot, ShieldCheck, Lock, Star } from "lucide-react";
+import { Banknote, Bell, Bot, ShieldCheck, Lock, Star, User as UserIcon } from "lucide-react";
 import { useLanguage } from "@/context/language-context";
 
 export default function SettingsPage() {
@@ -31,6 +32,19 @@ export default function SettingsPage() {
       settings: { ...prevState.settings, [key]: value }
     }));
   };
+
+  const handleEconomicProfileChange = (key: string, value: any) => {
+    setState(prevState => ({
+      ...prevState,
+      user: {
+        ...prevState.user,
+        economicProfile: {
+          ...prevState.user.economicProfile,
+          [key]: value
+        }
+      }
+    }));
+  }
   
   const handleSave = () => {
     // State is already saved to localStorage via context useEffect
@@ -154,6 +168,31 @@ export default function SettingsPage() {
                  <CardDescription>Customize how our AI analyzes your spending.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
+                 <div className="space-y-2">
+                  <Label>Occupation</Label>
+                   <Select value={user.economicProfile.occupation} onValueChange={(value) => handleEconomicProfileChange('occupation', value)} disabled={!isPremium}>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Select occupation" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="Software Engineer">Software Engineer</SelectItem>
+                        <SelectItem value="Student">Student</SelectItem>
+                        <SelectItem value="Photographer">Photographer</SelectItem>
+                        <SelectItem value="Accountant">Accountant</SelectItem>
+                        <SelectItem value="Doctor">Doctor</SelectItem>
+                    </SelectContent>
+                </Select>
+                </div>
+                 <div className="space-y-2">
+                    <Label htmlFor="dependents">Financial Dependents</Label>
+                    <Input
+                      id="dependents"
+                      type="number"
+                      value={user.economicProfile.dependents}
+                      onChange={(e) => handleEconomicProfileChange('dependents', parseInt(e.target.value) || 0)}
+                       disabled={!isPremium}
+                    />
+                  </div>
                 <div className="space-y-2">
                   <Label>{t('categorization_sensitivity')}</Label>
                    <Select value={settings.categorizationSensitivity} onValueChange={(value) => handleSettingsChange('categorizationSensitivity', value)} disabled={!isPremium}>
@@ -187,3 +226,4 @@ export default function SettingsPage() {
     </div>
   );
 }
+
