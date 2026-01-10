@@ -119,14 +119,17 @@ export function AccountOverview() {
         </div>
          {user.tier === 'free' && (
             <div className="mt-4 space-y-2">
-                {user.connectedBanks.map(bank => (
-                    <div key={bank.id} className="flex justify-between items-center text-sm p-2 bg-background/50 rounded-md">
-                        <span className="text-muted-foreground">{bank.name} ({bank.accountNumber})</span>
-                        <span className={cn("font-mono text-foreground", (bank.balance || 0) < 0 && "text-destructive")}>
-                          {(bank.balance || 0) < 0 ? '-' : ''}${Math.abs(bank.balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                        </span>
-                    </div>
-                ))}
+                {user.connectedBanks.map(bank => {
+                    const balance = bank.balance || 0;
+                    return (
+                        <div key={bank.id} className="flex justify-between items-center text-sm p-2 bg-background/50 rounded-md">
+                            <span className="text-muted-foreground">{bank.name} ({bank.accountNumber})</span>
+                            <span className={cn("font-mono text-foreground", balance < 0 && "text-destructive")}>
+                              {balance < 0 ? '-' : ''}${Math.abs(balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </span>
+                        </div>
+                    );
+                })}
             </div>
         )}
       </div>
