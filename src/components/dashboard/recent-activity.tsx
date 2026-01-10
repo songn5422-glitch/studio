@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
-import { CheckCircle, XCircle, ShoppingCart, Utensils, Car, VenetianMask, Receipt } from 'lucide-react';
+import { CheckCircle, XCircle, ShoppingCart, Utensils, Car, VenetianMask, Receipt, Shirt, Star } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 
 export function RecentActivity() {
@@ -20,10 +20,28 @@ export function RecentActivity() {
         case 'shopping': return <ShoppingCart className="h-5 w-5 text-muted-foreground" />;
         case 'entertainment': return <VenetianMask className="h-5 w-5 text-muted-foreground" />;
         case 'bills-utilities': return <Receipt className="h-5 w-5 text-muted-foreground" />;
+        case 'clothing': return <Shirt className="h-5 w-5 text-muted-foreground" />;
+        case 'subscriptions': return <Star className="h-5 w-5 text-muted-foreground" />;
         case 'Need': return <CheckCircle className="h-5 w-5 text-accent" />;
         case 'Want': return <XCircle className="h-5 w-5 text-amber-400" />;
         default: return <ShoppingCart className="h-5 w-5 text-muted-foreground" />;
     }
+  }
+
+  const getCategoryDisplay = (category: string) => {
+    if (user.tier !== 'premium') {
+        const categoryMap: {[key: string]: string} = {
+            'food-dining': 'Food & Dining',
+            'transportation': 'Transportation',
+            'shopping': 'Shopping',
+            'bills-utilities': 'Bills & Utilities',
+            'entertainment': 'Entertainment',
+            'subscriptions': 'Subscriptions',
+            'income': 'Income'
+        };
+        return categoryMap[category] || category;
+    }
+    return t(category.toLowerCase()) || category;
   }
 
   return (
@@ -46,12 +64,16 @@ export function RecentActivity() {
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                 {user.tier === 'premium' && (
-                    <Badge variant={tx.category === 'Need' ? 'secondary' : 'outline'} className={cn(tx.category === 'Want' && 'border-amber-400 text-amber-400')}>
-                        {tx.category === 'Need' ? t('needs') : t('wants')}
-                    </Badge>
-                 )}
-                <p className={cn("font-semibold text-right w-24", tx.amount > 0 ? "text-accent" : "text-foreground")}>
+                <Badge 
+                  variant={tx.category === 'Need' ? 'secondary' : 'outline'} 
+                  className={cn(
+                    tx.category === 'Want' && 'border-amber-400 text-amber-400',
+                    user.tier !== 'premium' && 'border-sky-400 text-sky-400'
+                  )}
+                >
+                    {getCategoryDisplay(tx.category)}
+                </Badge>
+                <p className={cn("font-semibold text-right w-24 font-mono", tx.amount > 0 ? "text-accent" : "text-foreground")}>
                   {tx.amount < 0 ? '-' : ''}${Math.abs(tx.amount).toFixed(2)}
                 </p>
               </div>

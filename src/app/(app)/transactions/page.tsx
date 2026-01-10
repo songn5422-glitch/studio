@@ -45,12 +45,13 @@ import { getPlaceholderImage } from "@/lib/placeholder-images";
 import { useLanguage } from "@/context/language-context";
 
 export default function TransactionsPage() {
-  const { transactions } = useApp();
+  const { transactions, user } = useApp();
   const { t } = useLanguage();
   const [filter, setFilter] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
   const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
+  const isPremium = user.tier === 'premium';
 
   const filteredTransactions = useMemo(() => {
     return transactions.filter((tx) => {
@@ -74,16 +75,19 @@ export default function TransactionsPage() {
   }
 
   const getCategoryDisplay = (category: string) => {
-    // Simple mapping for free tier categories
-    const categoryMap: {[key: string]: string} = {
-        'food-dining': 'Food & Dining',
-        'transportation': 'Transportation',
-        'shopping': 'Shopping',
-        'bills-utilities': 'Bills & Utilities',
-        'entertainment': 'Entertainment',
-        'subscriptions': 'Subscriptions',
-    };
-    return categoryMap[category] || t(category.toLowerCase()) || category;
+    if (!isPremium) {
+        const categoryMap: {[key: string]: string} = {
+            'food-dining': 'Food & Dining',
+            'transportation': 'Transportation',
+            'shopping': 'Shopping',
+            'bills-utilities': 'Bills & Utilities',
+            'entertainment': 'Entertainment',
+            'subscriptions': 'Subscriptions',
+            'income': 'Income'
+        };
+        return categoryMap[category] || category;
+    }
+    return t(category.toLowerCase()) || category;
   }
 
   return (
@@ -106,13 +110,21 @@ export default function TransactionsPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="All">{t('all_categories')}</SelectItem>
-              <SelectItem value="Need">{t('needs')}</SelectItem>
-              <SelectItem value="Want">{t('wants')}</SelectItem>
-               <SelectItem value="food-dining">Food & Dining</SelectItem>
-                <SelectItem value="transportation">Transportation</SelectItem>
-                <SelectItem value="shopping">Shopping</SelectItem>
-                <SelectItem value="bills-utilities">Bills & Utilities</SelectItem>
-                <SelectItem value="entertainment">Entertainment</SelectItem>
+              {isPremium ? (
+                <>
+                  <SelectItem value="Need">{t('needs')}</SelectItem>
+                  <SelectItem value="Want">{t('wants')}</SelectItem>
+                </>
+              ) : (
+                <>
+                  <SelectItem value="food-dining">Food & Dining</SelectItem>
+                  <SelectItem value="transportation">Transportation</SelectItem>
+                  <SelectItem value="shopping">Shopping</SelectItem>
+                  <SelectItem value="bills-utilities">Bills & Utilities</SelectItem>
+                  <SelectItem value="entertainment">Entertainment</SelectItem>
+                  <SelectItem value="subscriptions">Subscriptions</SelectItem>
+                </>
+              )}
             </SelectContent>
           </Select>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -154,7 +166,7 @@ export default function TransactionsPage() {
                       variant={tx.category === "Need" ? "secondary" : "outline"}
                       className={cn(
                         tx.category === 'Want' && 'border-amber-400 text-amber-400',
-                        tx.category !== 'Need' && tx.category !== 'Want' && 'border-sky-400 text-sky-400'
+                        !isPremium && 'border-sky-400 text-sky-400'
                         )}
                     >
                       {getCategoryDisplay(tx.category)}

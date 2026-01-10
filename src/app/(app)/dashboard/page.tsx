@@ -10,7 +10,7 @@ import { useApp } from '@/hooks/use-app';
 import { BudgetStatus } from '@/components/dashboard/budget-status';
 import { AiInsights } from '@/components/analytics/ai-insights';
 import { Button } from '@/components/ui/button';
-import { Lock } from 'lucide-react';
+import { Lock, Star } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 
 
@@ -42,11 +42,19 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <Button size="lg" className="bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90">
+               <Star className="mr-2 h-4 w-4" />
               {t('upgrade_to_premium')}
             </Button>
           </CardContent>
         </Card>
-        <RecentActivity />
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <RecentActivity />
+          </div>
+          <div className="flex items-center">
+            <QuickActions />
+          </div>
+        </div>
       </div>
     );
   }

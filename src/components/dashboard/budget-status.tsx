@@ -20,16 +20,16 @@ export function BudgetStatus() {
   }, [transactions]);
   
   const totalBudget = settings.totalBudget;
-  const percentageUsed = Math.min((spendingThisMonth / totalBudget) * 100, 100);
+  const percentageUsed = totalBudget > 0 ? Math.min((spendingThisMonth / totalBudget) * 100, 100) : 0;
 
   const getStatus = () => {
     if (percentageUsed > 90) {
-      return { label: t('over_budget'), color: 'text-destructive', progressColor: 'bg-destructive' };
+      return { label: t('over_budget'), color: 'text-destructive' };
     }
     if (percentageUsed > 70) {
-      return { label: t('approaching_limit'), color: 'text-amber-400', progressColor: 'bg-amber-400' };
+      return { label: t('approaching_limit'), color: 'text-amber-400' };
     }
-    return { label: t('on_track'), color: 'text-accent', progressColor: 'bg-accent' };
+    return { label: t('on_track'), color: 'text-accent' };
   };
 
   const status = getStatus();
@@ -44,6 +44,7 @@ export function BudgetStatus() {
       </CardHeader>
       <CardContent>
         <div className="mb-4 flex items-baseline gap-2">
+            <p className="text-2xl font-bold">{t('current_level')}</p>
             <p className={cn("text-2xl font-bold", status.color)}>{status.label}</p>
         </div>
         <Progress value={percentageUsed} className="h-3 [&>div]:bg-gradient-to-r [&>div]:from-accent [&>div]:via-amber-400 [&>div]:to-destructive" />

@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Banknote, Bell, Bot, ShieldCheck, Lock } from "lucide-react";
+import { Banknote, Bell, Bot, ShieldCheck, Lock, Star } from "lucide-react";
 import { useLanguage } from "@/context/language-context";
 
 export default function SettingsPage() {
@@ -97,11 +97,11 @@ export default function SettingsPage() {
           
           <Card className="glass-card relative overflow-hidden">
              {!isPremium && (
-              <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center z-10">
+              <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center z-10 p-8 text-center">
                 <Lock className="h-10 w-10 text-primary mb-4" />
                 <h3 className="text-xl font-bold">Unlock Vault Settings</h3>
-                <p className="text-muted-foreground mb-4">Upgrade to Premium to enable automated savings.</p>
-                <Button>{t('upgrade_to_premium')}</Button>
+                <p className="text-muted-foreground mb-4">Upgrade to Premium to enable automated savings and time-locked protection.</p>
+                <Button> <Star className="mr-2 h-4 w-4" /> {t('upgrade_to_premium')}</Button>
               </div>
             )}
             <CardHeader>
@@ -111,7 +111,7 @@ export default function SettingsPage() {
             <CardContent className="space-y-6">
                <div className="space-y-2">
                 <Label>{t('default_lock_duration')}</Label>
-                <Select value={String(settings.lockDuration)} onValueChange={(value) => handleSettingsChange('lockDuration', parseInt(value))}>
+                <Select value={String(settings.lockDuration)} onValueChange={(value) => handleSettingsChange('lockDuration', parseInt(value))} disabled={!isPremium}>
                     <SelectTrigger>
                         <SelectValue placeholder="Select duration" />
                     </SelectTrigger>
@@ -132,6 +132,7 @@ export default function SettingsPage() {
                   <Switch
                     checked={settings.autoLockEnabled}
                     onCheckedChange={(checked) => handleSettingsChange('autoLockEnabled', checked)}
+                    disabled={!isPremium}
                   />
                 </div>
             </CardContent>
@@ -141,20 +142,21 @@ export default function SettingsPage() {
         <div className="space-y-8">
             <Card className="glass-card relative overflow-hidden">
                 {!isPremium && (
-                    <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center z-10 text-center p-4">
+                    <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center z-10 text-center p-8">
                         <Lock className="h-10 w-10 text-primary mb-4" />
                         <h3 className="text-xl font-bold">Unlock AI Preferences</h3>
-                        <p className="text-muted-foreground mb-4">Get advanced Need vs. Want categorization.</p>
-                        <Button>{t('upgrade_to_premium')}</Button>
+                        <p className="text-muted-foreground mb-4">Get advanced Need vs. Want categorization and insights.</p>
+                        <Button><Star className="mr-2 h-4 w-4" />{t('upgrade_to_premium')}</Button>
                     </div>
                 )}
               <CardHeader>
                 <CardTitle className="flex items-center gap-2"><Bot/> {t('ai_preferences')}</CardTitle>
+                 <CardDescription>Customize how our AI analyzes your spending.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-2">
                   <Label>{t('categorization_sensitivity')}</Label>
-                   <Select value={settings.categorizationSensitivity} onValueChange={(value) => handleSettingsChange('categorizationSensitivity', value)}>
+                   <Select value={settings.categorizationSensitivity} onValueChange={(value) => handleSettingsChange('categorizationSensitivity', value)} disabled={!isPremium}>
                     <SelectTrigger>
                         <SelectValue placeholder="Select sensitivity" />
                     </SelectTrigger>
