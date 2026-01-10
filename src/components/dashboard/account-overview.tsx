@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -23,6 +24,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { ArrowDown, ArrowUp, RefreshCcw } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
+import { cn } from '@/lib/utils';
 
 export function AccountOverview() {
   const { user, updateBalance } = useApp();
@@ -79,7 +81,7 @@ export function AccountOverview() {
   };
   
   const totalBalance = user.tier === 'free' 
-    ? user.connectedBanks.reduce((sum, bank) => sum + bank.balance, 0)
+    ? user.connectedBanks.reduce((sum, bank) => sum + (bank.balance || 0), 0)
     : user.balance;
 
   return (
@@ -120,7 +122,9 @@ export function AccountOverview() {
                 {user.connectedBanks.map(bank => (
                     <div key={bank.id} className="flex justify-between items-center text-sm p-2 bg-background/50 rounded-md">
                         <span className="text-muted-foreground">{bank.name} ({bank.accountNumber})</span>
-                        <span className="font-mono text-foreground">${bank.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        <span className={cn("font-mono text-foreground", (bank.balance || 0) < 0 && "text-destructive")}>
+                          {(bank.balance || 0) < 0 ? '-' : ''}${Math.abs(bank.balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </span>
                     </div>
                 ))}
             </div>
@@ -137,12 +141,12 @@ export function AccountOverview() {
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="bank" className="text-right">{t('bank')}</Label>
-              <Select defaultValue={user.connectedBanks[0].accountNumber}>
+              <Select defaultValue={user.connectedBanks.find(b => b.type !== 'Credit Card')?.accountNumber}>
                 <SelectTrigger id="bank" className="col-span-3">
                   <SelectValue placeholder="Select a bank" />
                 </SelectTrigger>
                 <SelectContent>
-                  {user.connectedBanks.map(bank => (
+                  {user.connectedBanks.filter(b => b.type !== 'Credit Card').map(bank => (
                     <SelectItem key={bank.accountNumber} value={bank.accountNumber}>
                       {bank.name} {bank.accountNumber}
                     </SelectItem>
@@ -178,12 +182,12 @@ export function AccountOverview() {
           <div className="grid gap-4 py-4">
              <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="bank-withdraw" className="text-right">{t('bank')}</Label>
-              <Select defaultValue={user.connectedBanks[0].accountNumber}>
+              <Select defaultValue={user.connectedBanks.find(b => b.type !== 'Credit Card')?.accountNumber}>
                 <SelectTrigger id="bank-withdraw" className="col-span-3">
                   <SelectValue placeholder="Select a bank" />
                 </SelectTrigger>
                 <SelectContent>
-                  {user.connectedBanks.map(bank => (
+                  {user.connectedBanks.filter(b => b.type !== 'Credit Card').map(bank => (
                     <SelectItem key={bank.accountNumber} value={bank.accountNumber}>
                       {bank.name} {bank.accountNumber}
                     </SelectItem>
