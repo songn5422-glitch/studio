@@ -2,7 +2,6 @@
 
 import { PageHeader } from '@/components/dashboard/page-header';
 import { AccountOverview } from '@/components/dashboard/account-overview';
-import { ProtectionStatus } from '@/components/dashboard/protection-status';
 import { QuickActions } from '@/components/dashboard/quick-actions';
 import { RecentActivity } from '@/components/dashboard/recent-activity';
 import { useLanguage } from '@/context/language-context';
@@ -53,7 +52,7 @@ export default function DashboardPage() {
           <div className="lg:col-span-2">
             <RecentActivity />
           </div>
-          <div className="flex items-center">
+          <div className="lg:col-span-1">
             <QuickActions />
           </div>
         </div>
@@ -67,7 +66,6 @@ export default function DashboardPage() {
         title={t('dashboard')}
         description={t('dashboard_description')}
       />
-      <AccountOverview />
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         <DniGauge />
         <VaultYieldCard />
@@ -76,7 +74,7 @@ export default function DashboardPage() {
          <div className="lg:col-span-2">
             <RecentActivity />
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center lg:col-span-1">
             <QuickActions />
           </div>
       </div>

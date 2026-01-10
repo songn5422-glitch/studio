@@ -6,10 +6,12 @@ import Link from 'next/link';
 import { useLanguage } from '@/context/language-context';
 import { useApp } from '@/hooks/use-app';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { useRouter } from 'next/navigation';
 
 export function QuickActions() {
   const { t } = useLanguage();
-  const { user } = useApp();
+  const { user, setTier } = useApp();
+  const router = useRouter();
 
   if (user.tier === 'free') {
       return (
@@ -34,7 +36,10 @@ export function QuickActions() {
                     <CardTitle className="text-base">Want automated savings?</CardTitle>
                 </CardHeader>
                 <CardContent className="p-2">
-                    <Button size="sm" className="w-full">
+                    <Button size="sm" className="w-full" onClick={() => {
+                      setTier('premium');
+                      router.push('/scan');
+                    }}>
                         <ScanLine className="mr-2 h-4 w-4" />
                         Upgrade to Scan
                     </Button>
@@ -45,7 +50,7 @@ export function QuickActions() {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+    <div className="grid grid-cols-1 gap-4 w-full">
       <Button asChild size="lg" className="h-20 text-lg">
         <Link href="/scan">
           <ScanLine className="mr-3 h-6 w-6" />
