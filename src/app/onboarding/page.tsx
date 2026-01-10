@@ -6,12 +6,15 @@ import { Check, Shield, Wallet } from 'lucide-react';
 import { useApp } from '@/hooks/use-app';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/context/language-context';
-import { useState } from 'react';
+import { useState }from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function OnboardingPage() {
     const { user, setTier, connectWallet, completeOnboarding } = useApp();
     const { t } = useLanguage();
     const [selectedTier, setSelectedTier] = useState<'free' | 'premium' | null>(null);
+    const router = useRouter();
+
 
     const freeFeatures = [
         t('link_unlimited_accounts'),
@@ -41,8 +44,18 @@ export default function OnboardingPage() {
     
     const handleConnectAndFinish = () => {
         connectWallet();
-        completeOnboarding();
     }
+    
+    if (user.walletAddress) {
+        if (user.tier === 'premium' && !user.economicProfile.contractSignedAt) {
+            router.push('/onboarding/economic-profile');
+            return null;
+        }
+        if (!user.onboardingCompleted) {
+            completeOnboarding(); // This will trigger redirect via context
+        }
+    }
+
 
     if (selectedTier) {
       return (
@@ -74,9 +87,9 @@ export default function OnboardingPage() {
                 </CardContent>
                 <CardFooter>
                     {user.walletAddress ? (
-                        <Button onClick={completeOnboarding} className="w-full" size="lg">Go to Dashboard</Button>
+                        <Button onClick={() => user.tier === 'premium' ? router.push('/onboarding/economic-profile') : completeOnboarding()} className="w-full" size="lg">Continue</Button>
                     ) : (
-                        <Button onClick={connectWallet} className="w-full neon-glow" size="lg">
+                        <Button onClick={handleConnectAndFinish} className="w-full neon-glow" size="lg">
                             <Wallet className="mr-2 h-4 w-4" />
                             Connect Wallet
                         </Button>

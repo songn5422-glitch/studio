@@ -21,6 +21,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     router.push('/onboarding');
     return null; 
   }
+  
+  if (user.tier === 'premium' && !user.economicProfile.contractSignedAt) {
+    router.push('/onboarding/economic-profile');
+    return null;
+  }
 
   return (
     <TooltipProvider>

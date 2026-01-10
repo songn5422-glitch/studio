@@ -25,7 +25,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setState(prevState => ({
           ...prevState,
           ...parsedState,
-          user: {...prevState.user, ...parsedState.user},
+          user: {...prevState.user, ...parsedState.user, economicProfile: {...prevState.user.economicProfile, ...parsedState.user.economicProfile}},
           settings: {...prevState.settings, ...parsedState.settings},
         }));
       }
@@ -46,10 +46,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [state, isInitialized]);
   
   useEffect(() => {
-    if (isInitialized && !state.user.onboardingCompleted) {
-        router.push('/onboarding');
+    if (isInitialized) {
+        if (!state.user.onboardingCompleted) {
+            router.push('/onboarding');
+        } else if (state.user.tier === 'premium' && !state.user.economicProfile.contractSignedAt) {
+            router.push('/onboarding/economic-profile');
+        }
     }
-  }, [isInitialized, state.user.onboardingCompleted, router]);
+  }, [isInitialized, state.user.onboardingCompleted, state.user.tier, state.user.economicProfile.contractSignedAt, router]);
 
   const connectWallet = () => {
     setState(prevState => ({
@@ -65,7 +69,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const disconnectWallet = () => {
     setState(prevState => ({
       ...prevState,
-      user: { ...prevState.user, walletAddress: null }
+      user: { ...prevState.user, walletAddress: null, onboardingCompleted: false, tier: 'free' } // Reset on disconnect
     }));
     toast({
       title: "Wallet Disconnected",
@@ -113,10 +117,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
       ...prevState,
       user: { ...prevState.user, tier }
     }));
-    toast({
-      title: `Switched to ${tier.charAt(0).toUpperCase() + tier.slice(1)} Plan`,
-      description: tier === 'premium' ? "All premium features are now unlocked!" : "You are now on the free plan."
-    })
+    if (tier === 'premium') {
+      toast({
+        title: `Switched to Premium Plan`,
+        description: "All premium features are now unlocked!"
+      })
+    }
   };
 
   const completeOnboarding = () => {
@@ -143,12 +149,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return null; // Or a loading spinner
   }
   
-  // Prevent rendering children if onboarding is not complete
-  if (!state.user.onboardingCompleted && isInitialized) {
-     return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
-  }
-
-
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }
 
