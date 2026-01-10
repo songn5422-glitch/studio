@@ -107,7 +107,7 @@ export default function VaultPage() {
 
             return (
                 <Card key={entry.id} className="glass-card">
-                    <CardContent className="p-4 grid grid-cols-1 md:grid-cols-5 items-center gap-4">
+                    <CardContent className="p-4 grid grid-cols-1 md:grid-cols-6 items-center gap-4">
                         <div className="md:col-span-2 space-y-1">
                             <p className="text-xl font-bold">${currentValue.toFixed(2)}</p>
                              <div className="flex items-center gap-2">
@@ -126,7 +126,7 @@ export default function VaultPage() {
                                 <Badge variant="secondary" className="bg-green-500/20 text-green-400 border-none">{entry.apy?.toFixed(2)}% APY</Badge>
                             </div>
                         </div>
-                        <div className="space-y-1">
+                        <div className="md:col-span-2 space-y-1">
                            <div className="flex items-center justify-between">
                              <Badge variant={isUnlockable ? "default" : "secondary"} className={isUnlockable ? "bg-accent hover:bg-accent/90" : ""}>
                                {isUnlockable ? t('unlockable') : t(entry.status.toLowerCase())}
@@ -137,8 +137,8 @@ export default function VaultPage() {
                            {!isUnlockable && <Countdown unlockDate={entry.unlockDate} />}
                         </div>
                         <div className="flex justify-end gap-2">
-                            <Button disabled={!isUnlockable}>{t('withdraw_button')}</Button>
                             <Button disabled={!isUnlockable} variant="outline">{t('reinvest_button')}</Button>
+                            <Button disabled={!isUnlockable}>{t('withdraw_button')}</Button>
                         </div>
                     </CardContent>
                 </Card>

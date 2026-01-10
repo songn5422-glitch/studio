@@ -80,10 +80,8 @@ export function DniGauge() {
             />
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-4 bg-foreground rounded-full" />
             <p className="text-4xl font-bold mt-2">{score.toFixed(2)}</p>
+             <p className={cn("font-semibold text-sm", status.color)}>{status.text}</p>
           </div>
-        </div>
-        <div className="text-center mt-4">
-          <p className={cn("font-semibold", status.color)}>{status.text}</p>
         </div>
       </CardContent>
     </Card>
