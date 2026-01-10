@@ -55,6 +55,18 @@ export type AppState = {
   vaultEntries: VaultEntry[];
 };
 
+export type Language = 'en' | 'vi';
+
+export type Dictionary = {
+  [key: string]: { [key: string]: string };
+};
+
+export type LanguageContextType = {
+  language: Language;
+  setLanguage: (language: Language) => void;
+  t: (key: string) => string;
+};
+
 export type AppContextType = AppState & {
   setState: React.Dispatch<React.SetStateAction<AppState>>;
   connectWallet: () => void;

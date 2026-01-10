@@ -11,6 +11,7 @@ import {
   ShieldCheck,
   Settings,
   Gavel,
+  Lock,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -18,36 +19,45 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { useApp } from '@/hooks/use-app';
+import { Badge } from '../ui/badge';
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/scan', label: 'Scan Purchase', icon: ScanLine },
-  { href: '/transactions', label: 'Transactions', icon: ArrowRightLeft },
-  { href: '/analytics', label: 'Analytics', icon: AreaChart },
-  { href: '/vault', label: 'Vault', icon: ShieldCheck },
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, premium: false },
+  { href: '/scan', label: 'Scan Purchase', icon: ScanLine, premium: true },
+  { href: '/transactions', label: 'Transactions', icon: ArrowRightLeft, premium: false },
+  { href: '/analytics', label: 'Analytics', icon: AreaChart, premium: false },
+  { href: '/vault', label: 'Vault', icon: ShieldCheck, premium: true },
 ];
 
 const secondaryNavItems = [
-    { href: '/settings', label: 'Settings', icon: Settings },
-    { href: '/legal', label: 'Legal', icon: Gavel },
+    { href: '/settings', label: 'Settings', icon: Settings, premium: false },
+    { href: '/legal', label: 'Legal', icon: Gavel, premium: false },
 ]
 
 export function NavLinks({ isCollapsed, isMobile = false }: { isCollapsed: boolean, isMobile?: boolean }) {
   const pathname = usePathname();
+  const { user } = useApp();
+  const isPremium = user.tier === 'premium';
 
   const renderLink = (item: typeof navItems[0]) => {
     const isActive = pathname === item.href || (item.href === '/dashboard' && pathname === '/');
+    const isLocked = item.premium && !isPremium;
+
     const LinkContent = (
       <Link
-        href={item.href}
+        href={isLocked ? '#' : item.href}
         className={cn(
-          'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
-          isActive && 'bg-muted text-primary',
+          'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all',
+          isLocked ? 'cursor-not-allowed opacity-50' : 'hover:text-primary',
+          isActive && !isLocked && 'bg-muted text-primary',
           isCollapsed && 'justify-center'
         )}
+        onClick={(e) => isLocked && e.preventDefault()}
       >
         <item.icon className="h-5 w-5" />
         <span className={cn('truncate', (isCollapsed && !isMobile) && 'sr-only')}>{item.label}</span>
+        {isLocked && !isCollapsed && <Lock className="ml-auto h-4 w-4" />}
       </Link>
     );
 
@@ -55,7 +65,10 @@ export function NavLinks({ isCollapsed, isMobile = false }: { isCollapsed: boole
       return (
         <Tooltip key={item.href}>
           <TooltipTrigger asChild>{LinkContent}</TooltipTrigger>
-          <TooltipContent side="right" sideOffset={5}>{item.label}</TooltipContent>
+          <TooltipContent side="right" sideOffset={5}>
+            {item.label}
+            {isLocked && <Badge variant="destructive" className="ml-2">Premium</Badge>}
+          </TooltipContent>
         </Tooltip>
       );
     }
