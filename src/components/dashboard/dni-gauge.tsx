@@ -73,12 +73,12 @@ export function DniGauge() {
               </Pie>
             </PieChart>
           </ResponsiveContainer>
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 text-center">
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col items-center">
              <div
               className="h-24 w-1 bg-foreground/50 transition-transform duration-500 origin-bottom"
               style={{ transform: `rotate(${needleValue * 1.8 - 90}deg)` }}
             />
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-4 bg-foreground rounded-full" />
+            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-4 bg-foreground rounded-full" />
             <p className="text-4xl font-bold mt-2">{score.toFixed(2)}</p>
              <p className={cn("font-semibold text-sm", status.color)}>{status.text}</p>
           </div>

@@ -107,11 +107,11 @@ export default function VaultPage() {
 
             return (
                 <Card key={entry.id} className="glass-card">
-                    <CardContent className="p-4 grid grid-cols-1 md:grid-cols-6 items-center gap-4">
+                    <CardContent className="p-4 grid grid-cols-1 md:grid-cols-7 items-center gap-4">
                         <div className="md:col-span-2 space-y-1">
                             <p className="text-xl font-bold">${currentValue.toFixed(2)}</p>
                              <div className="flex items-center gap-2">
-                                <p className="text-sm text-muted-foreground">Principal: ${(entry.principal || entry.amount).toFixed(2)}</p>
+                                <p className="text-sm text-muted-foreground">Principal: ${(principal).toFixed(2)}</p>
                                 <p className="text-sm text-green-400">(+${(entry.accruedInterest || 0).toFixed(2)})</p>
                              </div>
                             <div className="flex items-center gap-2">
@@ -136,7 +136,7 @@ export default function VaultPage() {
                            <Progress value={progress} className="h-2"/>
                            {!isUnlockable && <Countdown unlockDate={entry.unlockDate} />}
                         </div>
-                        <div className="flex justify-end gap-2">
+                        <div className="md:col-span-2 flex justify-end gap-2">
                             <Button disabled={!isUnlockable} variant="outline">{t('reinvest_button')}</Button>
                             <Button disabled={!isUnlockable}>{t('withdraw_button')}</Button>
                         </div>
