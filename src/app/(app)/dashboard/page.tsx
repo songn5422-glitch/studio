@@ -11,6 +11,8 @@ import { BudgetStatus } from '@/components/dashboard/budget-status';
 import { AiInsights } from '@/components/analytics/ai-insights';
 import { Button } from '@/components/ui/button';
 import { Lock } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+
 
 export default function DashboardPage() {
   const { t } = useLanguage();
