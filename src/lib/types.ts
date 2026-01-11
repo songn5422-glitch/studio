@@ -100,5 +100,4 @@ export type AppContextType = AppState & {
   addVaultEntry: (vaultEntry: Omit<VaultEntry, 'id'>) => void;
   updateBalance: (newBalance: number) => void;
   setTier: (tier: 'free' | 'premium') => void;
-  completeOnboarding: () => void;
 };

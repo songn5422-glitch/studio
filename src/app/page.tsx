@@ -8,12 +8,9 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    if (user.onboardingCompleted) {
-      router.replace('/dashboard');
-    } else {
-      router.replace('/onboarding');
-    }
-  }, [user, router]);
+    // Always start at onboarding
+    router.replace('/onboarding');
+  }, [router]);
 
   return null; // or a loading spinner
 }

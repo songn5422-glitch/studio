@@ -17,15 +17,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!user.onboardingCompleted) {
+    if (!user.walletAddress) {
       router.push('/onboarding');
     } else if (user.tier === 'premium' && !user.economicProfile.contractSignedAt) {
       router.push('/onboarding/economic-profile');
     }
-  }, [user.onboardingCompleted, user.tier, user.economicProfile.contractSignedAt, router]);
+  }, [user.walletAddress, user.tier, user.economicProfile.contractSignedAt, router]);
 
 
-  if (!user.onboardingCompleted || (user.tier === 'premium' && !user.economicProfile.contractSignedAt)) {
+  if (!user.walletAddress || (user.tier === 'premium' && !user.economicProfile.contractSignedAt)) {
     // Render nothing or a loading spinner while redirecting
     return null;
   }

@@ -21,17 +21,23 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const storedState = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (storedState) {
         const parsedState = JSON.parse(storedState);
-        // Deep merge to ensure new mock data fields are included
+        // Deep merge, but ensure onboarding is reset
+        const initialUserState = {
+          ...MOCK_DATA.user,
+          walletAddress: parsedState.user.walletAddress,
+          balance: parsedState.user.balance,
+          connectedBanks: parsedState.user.connectedBanks
+        };
+
         setState(prevState => ({
           ...prevState,
           ...parsedState,
-          user: {...prevState.user, ...parsedState.user, economicProfile: {...prevState.user.economicProfile, ...parsedState.user.economicProfile}},
-          settings: {...prevState.settings, ...parsedState.settings},
-          dniEngine: {...prevState.dniEngine, ...parsedState.dniEngine}
+          user: initialUserState,
         }));
       }
     } catch (error) {
       console.error("Failed to parse state from localStorage", error);
+       setState(MOCK_DATA);
     }
     setIsInitialized(true);
   }, []);
@@ -46,15 +52,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }, [state, isInitialized]);
   
-  useEffect(() => {
-    if (isInitialized) {
-        if (!state.user.onboardingCompleted) {
-            router.push('/onboarding');
-        } else if (state.user.tier === 'premium' && !state.user.economicProfile.contractSignedAt) {
-            router.push('/onboarding/economic-profile');
-        }
-    }
-  }, [isInitialized, state.user.onboardingCompleted, state.user.tier, state.user.economicProfile.contractSignedAt, router]);
 
   const connectWallet = () => {
     setState(prevState => ({
@@ -68,10 +65,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const disconnectWallet = () => {
-    setState(prevState => ({
-      ...prevState,
-      user: { ...MOCK_DATA.user } // Reset user state completely on disconnect
-    }));
+    setState(MOCK_DATA); // Reset to initial mock data
     router.push('/onboarding');
     toast({
       title: "Wallet Disconnected",
@@ -117,30 +111,25 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
   
   const setTier = (tier: 'free' | 'premium') => {
+    const wasFree = state.user.tier === 'free';
     setState(prevState => ({
       ...prevState,
       user: { ...prevState.user, tier }
     }));
-    if (tier === 'premium' && !state.user.onboardingCompleted) {
-        // If they are upgrading during onboarding, move them to wallet connect
-    } else if (tier === 'premium') {
+    
+    if (tier === 'premium' && wasFree) {
       toast({
         title: `Switched to Premium Plan`,
-        description: "All premium features are now unlocked!"
+        description: "Let's set up your economic profile."
       })
-      if (!state.user.economicProfile.contractSignedAt) {
-        router.push('/onboarding/economic-profile');
-      }
+      // The layout effect will handle redirection if contract isn't signed
+      router.push('/onboarding/economic-profile');
+    } else if (tier === 'premium') {
+       if (!state.user.economicProfile.contractSignedAt) {
+         router.push('/onboarding/economic-profile');
+       }
     }
   };
-
-  const completeOnboarding = () => {
-    setState(prevState => ({
-        ...prevState,
-        user: {...prevState.user, onboardingCompleted: true}
-    }));
-    router.push('/dashboard');
-  }
 
   const value: AppContextType = {
     ...state,
@@ -151,7 +140,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     addVaultEntry,
     updateBalance,
     setTier,
-    completeOnboarding,
   };
 
   if (!isInitialized) {

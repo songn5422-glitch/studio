@@ -10,7 +10,7 @@ import { useState }from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function OnboardingPage() {
-    const { user, setTier, connectWallet, completeOnboarding } = useApp();
+    const { user, setTier, connectWallet } = useApp();
     const { t } = useLanguage();
     const [selectedTier, setSelectedTier] = useState<'free' | 'premium' | null>(null);
     const router = useRouter();
@@ -42,17 +42,16 @@ export default function OnboardingPage() {
         setSelectedTier(tier);
     }
     
-    const handleConnectAndFinish = () => {
-        connectWallet();
-    }
-    
-    if (user.walletAddress) {
-        if (user.tier === 'premium' && !user.economicProfile.contractSignedAt) {
-            router.push('/onboarding/economic-profile');
-            return null;
-        }
-        if (!user.onboardingCompleted) {
-            completeOnboarding(); // This will trigger redirect via context
+    const handleContinue = () => {
+        if (!user.walletAddress) {
+            connectWallet();
+            // After connecting, the layout effect will handle routing.
+        } else {
+             if (user.tier === 'premium') {
+                router.push('/onboarding/economic-profile');
+            } else {
+                router.push('/dashboard');
+            }
         }
     }
 
@@ -86,14 +85,9 @@ export default function OnboardingPage() {
                     )}
                 </CardContent>
                 <CardFooter>
-                    {user.walletAddress ? (
-                        <Button onClick={() => user.tier === 'premium' ? router.push('/onboarding/economic-profile') : completeOnboarding()} className="w-full" size="lg">Continue</Button>
-                    ) : (
-                        <Button onClick={handleConnectAndFinish} className="w-full neon-glow" size="lg">
-                            <Wallet className="mr-2 h-4 w-4" />
-                            Connect Wallet
-                        </Button>
-                    )}
+                    <Button onClick={handleContinue} className="w-full" size="lg">
+                         {user.walletAddress ? 'Continue' : <><Wallet className="mr-2 h-4 w-4" /> Connect Wallet</>}
+                    </Button>
                 </CardFooter>
             </Card>
         </div>
