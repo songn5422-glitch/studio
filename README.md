@@ -1,57 +1,81 @@
-# 🛡️ SmartGuard - AI-Powered Financial Guardian
+This is the updated README.md following your specific format, incorporating the sophisticated economic logic, ethical safeguards, and the Freemium model developed through your mentor sessions.
 
-## 🎯 Competition Track: AI & Oracles
+🛡️ SmartGuard - The Autonomous Financial Guardian
 
-SmartGuard is an intelligent financial guardian designed to combat the "impulse spending" epidemic among digital consumers. By combining AI-driven sentiment analysis with decentralized blockchain enforcement, SmartGuard transforms passive budgeting into active financial discipline. 
+🎯 Competition Track: AI & Oracles
+SmartGuard is a bifurcated Fintech platform designed to transform passive budgeting into active financial discipline. Unlike traditional trackers, SmartGuard acts as an Autonomous Financial Guardian, using a "Web 2.5" approach to bridge real-world financial data with decentralized enforcement.
 
-The app uses a smartphone as an **Oracle** to scan real-world products, employs **AI** to categorize necessity, and utilizes **Blockchain Smart Contracts** to automatically lock "at-risk" funds into a time-locked cooling-off vault.
+The platform operates on a Freemium Model:
 
-## ✨ Key Features
-1. **AI-Powered Purchase Scanning**: Uses computer vision and LLMs to categorize purchases as "Needs" vs "Wants" based on user history.
-2. **Oracle Price Verification**: Real-time market price validation via simulated decentralized oracles to ensure fair market value.
-3. **Blockchain Savings Vault**: Secure, time-locked smart contracts that hold funds during "impulse" windows.
-4. **Spending Analytics**: Recharts-powered visual insights into Needs vs. Wants ratios and prevented impulse buys.
-5. **Impulse Protection**: Automated "Hard-coded discipline" that moves excess funds to a vault when spending thresholds are breached.
+Free Tier (Monitor): Uses Data Oracles and On-chain Hashing to provide an immutable "Financial Mirror."
+Premium Tier (Guardian): Leverages Price Oracles, Advanced LLM Agents, and Smart Contract Vaults to enforce discipline through "Hard-coded Willpower."
+✨ Key Features
+AI-Powered Economic Logic: Uses Gemini/Genkit to calculate a Dynamic Necessity Index (DNI). It evaluates purchases based on Price Elasticity of Demand (PED) and the user’s specific Occupation Profile rather than simple "feelings."
+Dual-Oracle Verification: Combines Data Oracles (fetching bank feeds) and Price Oracles (validating real-time market value) to act as a secure bridge between off-chain spending and on-chain action.
+Ethical Safeguards (Soft Commitment): Implements a 2-step verification flow—AI Recommendations for cheaper alternatives followed by a 60-second Mindfulness Timer—ensuring all blockchain locks are voluntary and intentional.
+Blockchain Yield Vault: Automatically locks "impulse overages" into a DeFi-integrated Smart Contract. Funds generate passive income through decentralized lending protocols (e.g., Aave) during the lock period.
+Immutable Financial Passport: Hashes and anchors transaction data to the Polygon network, creating a tamper-proof "Audit Trail" of financial discipline that preserves user privacy while proving creditworthiness.
+🏗️ Architecture
+Frontend: Next.js 15 (React 19) + Tailwind CSS
+Web3 Integration: Simulated via Thirdweb SDK for MVP
+Blockchain: Polygon Amoy Testnet (Simulated transaction logging)
+AI: Purchase categorization and Economic modeling using Genkit & Gemini.
+🚀 Getting Started
 
-## 🏗️ Architecture
-- **Frontend**: Next.js 15 (React 19) + Tailwind CSS
-- **Web3 Integration**: Simulated for MVP
-- **Blockchain**: Polygon Mumbai/Amoy Testnet (Simulated)
-- **AI**: Purchase categorization engine using Genkit & Gemini.
+Installation
+Clone the repository:
+code
+Bash
 
-## 🚀 Getting Started
+download
 
-### Installation
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/your-username/smartguard-mvp.git
-   cd smartguard-mvp
-   ```
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-3. **Environment variables:**
-   Create a `.env.local` file in the root directory and add your Google AI API Key (obtainable from Google AI Studio):
-   ```
-   GOOGLE_API_KEY=your_google_api_key_here
-   ```
+content_copy
 
-### How to run locally
+expand_less
+git clone https://github.com/songn5422-glitch/smartguard-mvp.git
+cd smartguard-mvp
+Install dependencies:
+code
+Bash
+
+download
+
+content_copy
+
+expand_less
+npm install
+Environment variables:
+Create a .env.local file in the root directory and add your Google AI API Key:
+code
+Code
+
+download
+
+content_copy
+
+expand_less
+GOOGLE_API_KEY=your_google_api_key_here
+How to run locally
 To start the development server and view the app in your browser:
-   ```bash
-   npm run dev
-   ```
+
+code
+Bash
+
+download
+
+content_copy
+
+expand_less
+npm run dev
 The app will be available at http://localhost:9002.
 
-### How to connect wallet
-The wallet connection is simulated for this MVP.
-1. Click the "Connect Wallet" button in the SmartGuard header.
-2. The application will simulate a connection and display a mock wallet address and balance.
+📜 Legal Compliance
+SmartGuard MVP - Competition Prototype
 
-## 📜 Legal Compliance
-**SmartGuard MVP - Competition Prototype**
-- This project is a demonstration prototype.
-- **Non-Custodial**: This is a decentralized tool. Users maintain full custody of their funds via their own private wallets.
-- **Educational Purpose**: This is not a licensed financial service. All "locks" and "vaults" are performed on the Polygon Testnet using non-value test tokens.
-- **Compliance**: Future production versions would require full KYC/AML integration and financial service licensing in the operating jurisdictions.
+Informed Consent: Every blockchain lock is preceded by a "Discipline Agreement" signed and hashed on-chain during onboarding.
+Non-Custodial: This is a decentralized tool. Users maintain full custody of their funds via their own private wallets and self-executing smart contracts.
+Educational Purpose: This is not a licensed financial service. All "locks" and "yields" are performed on the Polygon Testnet using non-value test tokens for demonstration.
+Accountability: The 2-step verification process provides a transparent "Intent Attestation," protecting the platform and user from accidental or forced fund locking.
+👥 Team
+Team Name: bột ngọt
+
